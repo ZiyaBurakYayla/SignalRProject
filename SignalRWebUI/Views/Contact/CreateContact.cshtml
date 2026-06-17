@@ -1,0 +1,159 @@
+@model CreateContactDto
+@{
+    ViewData["Title"] = "Yeni İletişim Bilgisi Ekle";
+}
+
+<style>
+    .material-symbols-outlined { font-variation-settings: 'FILL' 0, 'wght' 300, 'GRAD' 0, 'opsz' 24; }
+    .icon-fill { font-variation-settings: 'FILL' 1, 'wght' 400, 'GRAD' 0, 'opsz' 24; }
+</style>
+
+<main class="w-full max-w-4xl mx-auto px-6 py-12 md:py-24">
+
+    <!-- Header -->
+    <header class="mb-12 flex items-start gap-4">
+        <a asp-controller="Contact" asp-action="ContactList"
+           class="mt-2 p-2 rounded-full text-on-surface-variant hover:bg-surface-container-high transition-colors focus:outline-none focus:ring-2 focus:ring-primary">
+            <span class="material-symbols-outlined text-2xl">arrow_back</span>
+        </a>
+        <div>
+            <h1 class="font-headline text-4xl md:text-5xl font-semibold tracking-tight text-on-background mb-3">
+                Yeni İletişim Bilgisi Ekle
+            </h1>
+            <p class="font-body text-lg text-on-surface-variant max-w-2xl leading-relaxed">
+                Müşterilerinizin size kolayca ulaşabilmesi için restoranınızın güncel iletişim kanallarını ve konum detaylarını tanımlayın.
+            </p>
+        </div>
+    </header>
+
+    <!-- Form Card -->
+    <div class="bg-surface-container-low rounded-2xl p-8 md:p-12 shadow-[0_2px_16px_rgba(58,48,42,0.04)] border border-outline-variant/30">
+        <form asp-controller="Contact" asp-action="CreateContact" method="post" class="space-y-10">
+
+            <!-- Lokasyon -->
+            <div>
+                <label asp-for="Location" class="block font-label text-base font-semibold text-on-surface mb-2">
+                    Lokasyon <span class="text-tertiary">*</span>
+                </label>
+                <textarea asp-for="Location" rows="3"
+                          class="w-full rounded-lg border border-outline-variant bg-surface-container-lowest px-4 py-3 font-body text-base text-on-surface placeholder:text-on-surface-variant/60 focus:border-primary focus:ring-1 focus:ring-primary focus:outline-none transition-all duration-200 resize-y"
+                          placeholder="Örn: Caferağa Mah. Moda Cd. No:123 Kadıköy, İstanbul"></textarea>
+                <p class="mt-2 text-sm text-on-surface-variant font-body flex items-center gap-1.5">
+                    <span class="material-symbols-outlined text-[16px]">info</span>
+                    Ziyaretçilerinizin sizi kolayca bulabilmesi için açık adresi eksiksiz girin.
+                </p>
+                <span asp-validation-for="Location" class="text-error text-xs mt-1 block"></span>
+            </div>
+
+            <!-- Telefon & E-posta -->
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+
+                <!-- Telefon -->
+                <div>
+                    <label asp-for="Phone" class="block font-label text-base font-semibold text-on-surface mb-2">
+                        Telefon Numarası
+                    </label>
+                    <div class="relative">
+                        <span class="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none text-on-surface-variant/60">
+                            <span class="material-symbols-outlined text-[20px] icon-fill">call</span>
+                        </span>
+                        <input asp-for="Phone" type="tel"
+                               class="w-full rounded-lg border border-outline-variant bg-surface-container-lowest pl-11 pr-4 py-3 font-body text-base text-on-surface placeholder:text-on-surface-variant/60 focus:border-primary focus:ring-1 focus:ring-primary focus:outline-none transition-all duration-200"
+                               placeholder="+90 (___) ___ __ __" />
+                    </div>
+                </div>
+
+                <!-- E-posta -->
+                <div>
+                    <label asp-for="Email" class="block font-label text-base font-semibold text-on-surface mb-2">
+                        E-posta Adresi
+                    </label>
+                    <div class="relative">
+                        <span class="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none text-on-surface-variant/60">
+                            <span class="material-symbols-outlined text-[20px] icon-fill">mail</span>
+                        </span>
+                        <input asp-for="Email" type="email"
+                               class="w-full rounded-lg border border-outline-variant bg-surface-container-lowest pl-11 pr-4 py-3 font-body text-base text-on-surface placeholder:text-on-surface-variant/60 focus:border-primary focus:ring-1 focus:ring-primary focus:outline-none transition-all duration-200"
+                               placeholder="iletisim@sahararestoran.com" />
+                    </div>
+                </div>
+
+            </div>
+
+            <!-- Footer Başlık & Açıklaması -->
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-8 pt-2">
+
+                <div>
+                    <label asp-for="FooterTitle" class="block font-label text-base font-semibold text-on-surface mb-2">
+                        Footer Başlığı
+                    </label>
+                    <input asp-for="FooterTitle"
+                           class="w-full rounded-lg border border-outline-variant bg-surface-container-lowest px-4 py-3 font-body text-base text-on-surface placeholder:text-on-surface-variant/60 focus:border-primary focus:ring-1 focus:ring-primary focus:outline-none transition-all duration-200"
+                           placeholder="Örn: Sahara Restoran" />
+                    <span asp-validation-for="FooterTitle" class="text-error text-xs mt-1 block"></span>
+                </div>
+
+                <div>
+                    <label asp-for="FooterDescription" class="block font-label text-base font-semibold text-on-surface mb-2">
+                        Footer Açıklaması
+                    </label>
+                    <input asp-for="FooterDescription"
+                           class="w-full rounded-lg border border-outline-variant bg-surface-container-lowest px-4 py-3 font-body text-base text-on-surface placeholder:text-on-surface-variant/60 focus:border-primary focus:ring-1 focus:ring-primary focus:outline-none transition-all duration-200"
+                           placeholder="Örn: Lezzetin adresi, 2003'ten beri..." />
+                    <span asp-validation-for="FooterDescription" class="text-error text-xs mt-1 block"></span>
+                </div>
+
+            </div>
+
+            <!-- Çalışma Günleri & Saatleri -->
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+
+                <div>
+                    <label asp-for="OpenDays" class="block font-label text-base font-semibold text-on-surface mb-2">
+                        Açık Günler
+                    </label>
+                    <input asp-for="OpenDays"
+                           class="w-full rounded-lg border border-outline-variant bg-surface-container-lowest px-4 py-3 font-body text-base text-on-surface placeholder:text-on-surface-variant/60 focus:border-primary focus:ring-1 focus:ring-primary focus:outline-none transition-all duration-200"
+                           placeholder="Örn: Pazartesi - Cuma" />
+                    <span asp-validation-for="OpenDays" class="text-error text-xs mt-1 block"></span>
+                </div>
+
+                <div>
+                    <label asp-for="OpenDaysDescription" class="block font-label text-base font-semibold text-on-surface mb-2">
+                        Gün Açıklaması
+                    </label>
+                    <input asp-for="OpenDaysDescription"
+                           class="w-full rounded-lg border border-outline-variant bg-surface-container-lowest px-4 py-3 font-body text-base text-on-surface placeholder:text-on-surface-variant/60 focus:border-primary focus:ring-1 focus:ring-primary focus:outline-none transition-all duration-200"
+                           placeholder="Örn: Hafta içi her gün" />
+                    <span asp-validation-for="OpenDaysDescription" class="text-error text-xs mt-1 block"></span>
+                </div>
+
+                <div class="md:col-span-2">
+                    <label asp-for="OpenHours" class="block font-label text-base font-semibold text-on-surface mb-2">
+                        Çalışma Saatleri
+                    </label>
+                    <input asp-for="OpenHours"
+                           class="w-full rounded-lg border border-outline-variant bg-surface-container-lowest px-4 py-3 font-body text-base text-on-surface placeholder:text-on-surface-variant/60 focus:border-primary focus:ring-1 focus:ring-primary focus:outline-none transition-all duration-200"
+                           placeholder="Örn: 10:00 - 23:00" />
+                    <span asp-validation-for="OpenHours" class="text-error text-xs mt-1 block"></span>
+                </div>
+
+            </div>
+
+            <!-- Actions -->
+            <div class="pt-8 mt-4 border-t border-outline-variant/60 flex flex-col sm:flex-row items-center justify-end gap-4">
+                <a asp-controller="Contact" asp-action="ContactList"
+                   class="w-full sm:w-auto px-6 py-3 font-label font-semibold text-primary border border-outline-variant hover:border-primary hover:bg-surface-container-high rounded-lg transition-all duration-200 text-center">
+                    Vazgeç
+                </a>
+                <button type="submit"
+                        class="w-full sm:w-auto px-8 py-3 font-label font-semibold text-on-primary bg-primary hover:bg-on-primary-fixed-variant rounded-lg shadow-sm transition-all duration-200 flex items-center justify-center gap-2">
+                    <span>Kaydet</span>
+                    <span class="material-symbols-outlined text-[20px]">check</span>
+                </button>
+            </div>
+
+        </form>
+    </div>
+
+</main>

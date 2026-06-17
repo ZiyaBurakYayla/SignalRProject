@@ -1,0 +1,43 @@
+@{
+    Layout = null;
+}
+
+<!DOCTYPE html>
+<html>
+
+@await Component.InvokeAsync("UILayoutHeadComponent")
+
+<body class="sub_page">
+
+    @await Component.InvokeAsync("MenuNavbarComponent")
+
+    <section class="food_section layout_padding">
+        <div class="container">
+
+            <h4 class="page-title">Anlık Client Sayısı: <strong id="clientCountValue"></strong></h4>
+
+        </div>
+    </section>
+
+    @await Component.InvokeAsync("UILayoutFooterComponent")
+
+    @await Component.InvokeAsync("UILayoutScriptComponent")
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/microsoft-signalr/7.0.5/signalr.min.js"></script>
+    <script type="text/javascript">
+        var connection = new signalR.HubConnectionBuilder()
+            .withUrl("https://localhost:7196/signalrhub")
+            .build();
+
+        connection.on("ReceiveClientCount", function (clientCount) {
+            document.getElementById("clientCountValue").innerText = clientCount;
+        });
+
+        connection.start().catch(function (err) {
+            console.error(err.toString());
+        });
+    </script>
+
+</body>
+
+</html>

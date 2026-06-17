@@ -1,0 +1,119 @@
+<header class="bg-surface w-full h-16 sticky top-0 z-40 border-b border-border flex justify-between items-center px-6">
+    <div class="flex items-center gap-4">
+        <span class="text-xl font-bold text-text">SİSTEM <span class="text-primary font-normal">PANELİ</span></span>
+    </div>
+    <div class="flex-1 max-w-md mx-8 hidden sm:block relative">
+        <span class="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-text-muted text-sm">search</span>
+        <input class="w-full bg-surface-alt border border-border focus:border-primary text-text text-sm py-2 pl-10 pr-4 rounded-lg focus:ring-1 focus:ring-primary outline-none transition-colors duration-300 placeholder:text-text-muted"
+               placeholder="Sistemde ara..." type="text" />
+    </div>
+    <div class="flex items-center gap-4">
+
+        <!-- Notification Bell -->
+        <div class="relative" id="notifWrapper">
+            <button onclick="toggleNotifDropdown()"
+                    class="relative p-2 text-text-muted hover:text-primary transition-colors duration-300 rounded-full hover:bg-surface-alt">
+                <span class="material-symbols-outlined">notifications</span>
+                <span id="NotificationCountByStatusisFalse"
+                      style="display:none"
+                      class="absolute -top-0.5 -right-0.5 min-w-[18px] h-[18px] px-1 bg-red-500 text-white text-[10px] font-bold rounded-full flex items-center justify-center leading-none">
+                </span>
+            </button>
+
+            <!-- Dropdown -->
+            <div id="notifDropdown"
+                 class="hidden absolute right-0 mt-2 w-80 bg-surface border border-border rounded-xl shadow-lg z-50 overflow-hidden">
+                <div class="px-4 py-3 border-b border-border flex items-center justify-between">
+                    <span class="font-semibold text-sm text-text">Bildirimler</span>
+                    <span id="notifDropdownCount" class="text-xs text-text-muted"></span>
+                </div>
+                <div id="notilist" class="divide-y divide-border max-h-72 overflow-y-auto" style="scrollbar-width:none;-ms-overflow-style:none;"></div>
+                <style>#notilist::-webkit-scrollbar{display:none}</style>
+                <div class="px-4 py-2 border-t border-border text-center">
+                    <a href="#" class="text-xs text-primary hover:underline font-medium">Tümünü Gör</a>
+                </div>
+            </div>
+        </div>
+
+        <!-- Aktif Kullanıcı Sayısı -->
+        <div class="flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-surface-alt border border-border text-xs font-medium text-text-muted" title="Anlık bağlı kullanıcı">
+            <span class="w-2 h-2 rounded-full bg-green-500 animate-pulse"></span>
+            <span id="clientCountValue">0</span>
+            <span>çevrimiçi</span>
+        </div>
+
+        <button class="p-2 text-text-muted hover:text-primary transition-colors duration-300 rounded-full hover:bg-surface-alt">
+            <span class="material-symbols-outlined">settings</span>
+        </button>
+        <a asp-controller="Setting" asp-action="Index"
+           class="w-8 h-8 rounded-full bg-primary/20 text-primary flex items-center justify-center border border-primary/30 ml-2 hover:bg-primary/30 transition-colors"
+           title="Profil Ayarları">
+            <span class="material-symbols-outlined text-sm">person</span>
+        </a>
+    </div>
+</header>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/microsoft-signalr/7.0.5/signalr.min.js"></script>
+<script type="text/javascript">
+    function toggleNotifDropdown() {
+        var dropdown = document.getElementById("notifDropdown");
+        dropdown.classList.toggle("hidden");
+    }
+
+    document.addEventListener("click", function (e) {
+        var wrapper = document.getElementById("notifWrapper");
+        if (wrapper && !wrapper.contains(e.target)) {
+            document.getElementById("notifDropdown").classList.add("hidden");
+        }
+    });
+
+    (function () {
+        var connection = new signalR.HubConnectionBuilder()
+            .withUrl("https://localhost:7196/signalrhub")
+            .build();
+
+        connection.on("ReceiveClientCount", function (count) {
+            document.getElementById("clientCountValue").innerText = count;
+        });
+
+        connection.on("ReceiveNotificationCountByStatusisFalse", function (value) {
+            var badge = document.getElementById("NotificationCountByStatusisFalse");
+            badge.innerText = value;
+            badge.style.display = value > 0 ? "flex" : "none";
+            var countLabel = document.getElementById("notifDropdownCount");
+            if (countLabel) countLabel.innerText = value > 0 ? value + " yeni" : "";
+        });
+
+        connection.on("ReceiveNotificationListByFalse", function (values) {
+            var list = document.getElementById("notilist");
+            list.innerHTML = "";
+            values.forEach(function (item) {
+                var date = new Date(item.notificationDate);
+                var dateStr = date.toLocaleDateString("tr-TR", { day: "2-digit", month: "short" })
+                            + " " + date.toLocaleTimeString("tr-TR", { hour: "2-digit", minute: "2-digit" });
+                list.innerHTML += `
+                    <div class="flex items-start gap-3 px-4 py-3 hover:bg-surface-alt transition-colors">
+                        <div class="mt-0.5 w-8 h-8 rounded-full bg-primary/10 text-primary flex items-center justify-center flex-shrink-0">
+                            <span class="material-symbols-outlined text-[18px]">${item.notificationIcon || "info"}</span>
+                        </div>
+                        <div class="flex-1 min-w-0">
+                            <p class="text-sm text-text leading-snug">${item.description}</p>
+                            <p class="text-xs text-text-muted mt-0.5">${dateStr}</p>
+                        </div>
+                    </div>`;
+            });
+            if (values.length === 0) {
+                list.innerHTML = '<p class="text-sm text-text-muted text-center py-6">Yeni bildirim yok</p>';
+            }
+        });
+
+        connection.start().then(function () {
+            connection.invoke("SendNotification");
+            setInterval(function () {
+                connection.invoke("SendNotification");
+            }, 1000);
+        }).catch(function (err) {
+            console.error(err);
+        });
+    })();
+</script>

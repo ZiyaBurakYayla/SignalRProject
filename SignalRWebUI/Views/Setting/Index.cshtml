@@ -1,0 +1,101 @@
+@model SignalRWebUI.Dtos.IdentityDtos.UserEditDto
+@{
+    ViewData["Title"] = "Profil Düzenle";
+}
+
+<div class="max-w-2xl mx-auto space-y-10 font-body">
+
+    <!-- Header -->
+    <header class="space-y-3">
+        <p class="text-xs font-bold tracking-widest uppercase text-primary">Sahara Admin</p>
+        <h1 class="text-4xl md:text-5xl font-headline font-bold text-on-surface tracking-tight">Profil Bilgilerini Düzenle</h1>
+        <p class="text-base text-on-surface-variant">Hesap bilgilerinizi buradan güncelleyebilirsiniz.</p>
+    </header>
+
+    <!-- Form Card -->
+    <div class="bg-surface-container-lowest rounded-xl border border-outline-variant/60 shadow-sm p-8 sm:p-10">
+        <form asp-action="Index" asp-controller="Setting" method="post" class="space-y-6">
+            @Html.AntiForgeryToken()
+
+            <!-- Ad & Soyad -->
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-6">
+                <div class="flex flex-col gap-2">
+                    <label asp-for="Name" class="text-sm font-semibold text-on-surface">Ad</label>
+                    <input asp-for="Name" type="text" placeholder="Adınız"
+                           class="w-full bg-surface-container-lowest border border-outline-variant rounded-lg px-4 py-3 text-on-surface text-sm focus:border-primary focus:ring-1 focus:ring-primary focus:outline-none transition-colors" />
+                    <span asp-validation-for="Name" class="text-xs text-error"></span>
+                </div>
+                <div class="flex flex-col gap-2">
+                    <label asp-for="Surname" class="text-sm font-semibold text-on-surface">Soyad</label>
+                    <input asp-for="Surname" type="text" placeholder="Soyadınız"
+                           class="w-full bg-surface-container-lowest border border-outline-variant rounded-lg px-4 py-3 text-on-surface text-sm focus:border-primary focus:ring-1 focus:ring-primary focus:outline-none transition-colors" />
+                    <span asp-validation-for="Surname" class="text-xs text-error"></span>
+                </div>
+            </div>
+
+            <!-- Kullanıcı Adı -->
+            <div class="flex flex-col gap-2">
+                <label asp-for="Username" class="text-sm font-semibold text-on-surface">Kullanıcı Adı</label>
+                <div class="relative">
+                    <span class="absolute inset-y-0 left-0 flex items-center pl-4 text-on-surface-variant pointer-events-none">
+                        <span class="material-symbols-outlined text-xl">alternate_email</span>
+                    </span>
+                    <input asp-for="Username" type="text" placeholder="kullanici_adiniz"
+                           class="w-full bg-surface-container-lowest border border-outline-variant rounded-lg pl-11 pr-4 py-3 text-on-surface text-sm focus:border-primary focus:ring-1 focus:ring-primary focus:outline-none transition-colors" />
+                </div>
+                <span asp-validation-for="Username" class="text-xs text-error"></span>
+            </div>
+
+            <!-- E-posta -->
+            <div class="flex flex-col gap-2">
+                <label asp-for="Mail" class="text-sm font-semibold text-on-surface">E-posta</label>
+                <div class="relative">
+                    <span class="absolute inset-y-0 left-0 flex items-center pl-4 text-on-surface-variant pointer-events-none">
+                        <span class="material-symbols-outlined text-xl">mail</span>
+                    </span>
+                    <input asp-for="Mail" type="email" placeholder="ornek@email.com"
+                           class="w-full bg-surface-container-lowest border border-outline-variant rounded-lg pl-11 pr-4 py-3 text-on-surface text-sm focus:border-primary focus:ring-1 focus:ring-primary focus:outline-none transition-colors" />
+                </div>
+                <span asp-validation-for="Mail" class="text-xs text-error"></span>
+            </div>
+
+            <!-- Şifre -->
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-6 border-t border-outline-variant/40 pt-6">
+                <div class="flex flex-col gap-2">
+                    <label asp-for="Password" class="text-sm font-semibold text-on-surface">Yeni Şifre</label>
+                    <div class="relative">
+                        <span class="absolute inset-y-0 left-0 flex items-center pl-4 text-on-surface-variant pointer-events-none">
+                            <span class="material-symbols-outlined text-xl">lock</span>
+                        </span>
+                        <input asp-for="Password" type="password" placeholder="••••••••"
+                               class="w-full bg-surface-container-lowest border border-outline-variant rounded-lg pl-11 pr-4 py-3 text-on-surface text-sm focus:border-primary focus:ring-1 focus:ring-primary focus:outline-none transition-colors" />
+                    </div>
+                    <span class="text-xs text-on-surface-variant">Boş bırakırsanız şifre değişmez.</span>
+                </div>
+                <div class="flex flex-col gap-2">
+                    <label asp-for="ConfirmPassword" class="text-sm font-semibold text-on-surface">Şifre Tekrar</label>
+                    <div class="relative">
+                        <span class="absolute inset-y-0 left-0 flex items-center pl-4 text-on-surface-variant pointer-events-none">
+                            <span class="material-symbols-outlined text-xl">lock</span>
+                        </span>
+                        <input asp-for="ConfirmPassword" type="password" placeholder="••••••••"
+                               class="w-full bg-surface-container-lowest border border-outline-variant rounded-lg pl-11 pr-4 py-3 text-on-surface text-sm focus:border-primary focus:ring-1 focus:ring-primary focus:outline-none transition-colors" />
+                    </div>
+                </div>
+            </div>
+
+            <!-- Buttons -->
+            <div class="flex flex-col sm:flex-row items-center justify-end gap-4 pt-6 mt-2 border-t border-outline-variant/40">
+                <a asp-controller="Dashboard" asp-action="Index"
+                   class="w-full sm:w-auto px-8 py-3 rounded-lg border border-outline text-on-surface font-semibold text-sm hover:bg-surface-variant transition-colors flex items-center justify-center gap-2">
+                    Vazgeç
+                </a>
+                <button type="submit"
+                        class="w-full sm:w-auto px-8 py-3 rounded-lg bg-primary text-on-primary font-semibold text-sm hover:opacity-90 transition-opacity flex items-center justify-center gap-2 shadow-sm">
+                    <span class="material-symbols-outlined text-base">save</span>
+                    Güncelle
+                </button>
+            </div>
+        </form>
+    </div>
+</div>

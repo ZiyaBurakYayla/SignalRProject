@@ -1,0 +1,162 @@
+@model CreateProductDto
+@{
+    ViewData["Title"] = "Yeni Ürün Ekle";
+}
+
+<style>
+    .material-symbols-outlined { font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24; }
+    .transition-all-200 { transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1); }
+    [type='text'], [type='number'], select, textarea {
+        border-color: #d8d0c8;
+        background-color: #ffffff;
+        color: #3a302a;
+    }
+    [type='text']:focus, [type='number']:focus, select:focus, textarea:focus {
+        border-color: #c2652a;
+        box-shadow: 0 0 0 1px #c2652a;
+    }
+    [type='radio'] { color: #c2652a; border-color: #9a9088; }
+</style>
+
+<main class="w-full max-w-4xl mx-auto p-8 md:p-12">
+
+    <!-- Header -->
+    <header class="mb-12 border-b border-outline-variant/60 pb-6 flex items-center justify-between">
+        <div>
+            <h1 class="font-headline text-4xl md:text-5xl font-bold text-on-surface tracking-tight mb-2">Yeni Ürün Ekle</h1>
+            <p class="font-body text-on-surface-variant text-lg">Kataloğa yeni bir lezzet ekleyin.</p>
+        </div>
+        <a asp-controller="Product" asp-action="ProductList"
+           class="flex items-center text-secondary hover:text-primary transition-colors text-sm font-medium">
+            <span class="material-symbols-outlined mr-1" style="font-size: 20px;">arrow_back</span>
+            Ürün Listesine Dön
+        </a>
+    </header>
+
+    <!-- Form -->
+    <form asp-controller="Product" asp-action="CreateProduct" method="post"
+          class="bg-surface-container-low rounded-xl p-8 md:p-12 border border-outline-variant/40"
+          style="box-shadow: 0 2px 16px rgba(58,48,42,0.04);">
+
+        <div class="grid grid-cols-1 lg:grid-cols-12 gap-12">
+
+            <!-- Sol Kolon: Ürün Bilgileri -->
+            <div class="lg:col-span-7 space-y-8">
+
+                <!-- Ürün Adı -->
+                <div>
+                    <label asp-for="ProductName" class="block font-label text-sm font-semibold text-on-surface mb-2">
+                        Ürün Adı <span class="text-error">*</span>
+                    </label>
+                    <input asp-for="ProductName"
+                           class="w-full rounded-lg border border-outline-variant/60 bg-white px-4 py-3 font-body text-on-surface focus:border-primary focus:ring-1 focus:ring-primary outline-none transition-all-200"
+                           placeholder="Örn: Akdeniz Salatası" />
+                    <span asp-validation-for="ProductName" class="text-error text-xs mt-1 block"></span>
+                </div>
+
+                <!-- Açıklama -->
+                <div>
+                    <label asp-for="ProductDescription" class="block font-label text-sm font-semibold text-on-surface mb-2">Açıklama</label>
+                    <textarea asp-for="ProductDescription" rows="4"
+                              class="w-full rounded-lg border border-outline-variant/60 bg-white px-4 py-3 font-body text-on-surface focus:border-primary focus:ring-1 focus:ring-primary outline-none transition-all-200 resize-y"
+                              placeholder="Ürünün iştah açıcı açıklamasını buraya girin..."></textarea>
+                </div>
+
+                <!-- Fiyat & Kategori -->
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+
+                    <!-- Fiyat -->
+                    <div>
+                        <label asp-for="ProductPrice" class="block font-label text-sm font-semibold text-on-surface mb-2">
+                            Fiyat (TL) <span class="text-error">*</span>
+                        </label>
+                        <div class="relative rounded-lg shadow-sm">
+                            <div class="pointer-events-none absolute inset-y-0 left-0 flex items-center pl-4">
+                                <span class="text-secondary sm:text-sm font-medium">₺</span>
+                            </div>
+                            <input asp-for="ProductPrice"
+                                   class="w-full rounded-lg border border-outline-variant/60 bg-white py-3 pl-10 pr-4 font-body text-on-surface focus:border-primary focus:ring-1 focus:ring-primary outline-none transition-all-200"
+                                   placeholder="0.00" step="0.01" min="0" type="number" />
+                        </div>
+                        <span asp-validation-for="ProductPrice" class="text-error text-xs mt-1 block"></span>
+                    </div>
+
+                    <!-- Kategori -->
+                    <div>
+                        <label asp-for="CategoryId" class="block font-label text-sm font-semibold text-on-surface mb-2">
+                            Kategori <span class="text-error">*</span>
+                        </label>
+                        <select asp-for="CategoryId" asp-items="ViewBag.categories"
+                                class="w-full rounded-lg border border-outline-variant/60 bg-white px-4 py-3 font-body text-on-surface focus:border-primary focus:ring-1 focus:ring-primary outline-none transition-all-200">
+                            <option value="">-- Kategori Seçin --</option>
+                        </select>
+                        <span asp-validation-for="CategoryId" class="text-error text-xs mt-1 block"></span>
+                    </div>
+
+                </div>
+
+                <!-- Görsel URL -->
+                <div>
+                    <label asp-for="ProductImageUrl" class="block font-label text-sm font-semibold text-on-surface mb-2">Görsel URL</label>
+                    <input asp-for="ProductImageUrl"
+                           class="w-full rounded-lg border border-outline-variant/60 bg-white px-4 py-3 font-body text-on-surface focus:border-primary focus:ring-1 focus:ring-primary outline-none transition-all-200"
+                           placeholder="https://..." />
+                </div>
+
+            </div>
+
+            <!-- Sağ Kolon: Durum -->
+            <div class="lg:col-span-5 space-y-8">
+
+                <!-- Ürün Durumu -->
+                <fieldset>
+                    <legend class="block font-label text-sm font-semibold text-on-surface mb-3">Ürün Durumu</legend>
+                    <div class="bg-surface-container-lowest rounded-xl border border-outline-variant/40 p-5 space-y-3">
+
+                        <!-- Aktif -->
+                        <label class="relative flex cursor-pointer items-start gap-4 p-4 rounded-lg border border-primary/20 bg-primary/5 transition-all-200">
+                            <div class="flex h-6 items-center">
+                                <input type="radio" name="ProductStatus" value="true" checked="checked"
+                                       class="h-4 w-4 border-outline-variant text-primary focus:ring-primary bg-white" />
+                            </div>
+                            <div class="flex flex-col">
+                                <span class="block text-sm font-medium text-on-surface">Aktif</span>
+                                <span class="block text-xs text-secondary mt-0.5">Müşteriler sipariş verebilir.</span>
+                            </div>
+                        </label>
+
+                        <!-- Pasif -->
+                        <label class="relative flex cursor-pointer items-start gap-4 p-4 rounded-lg border border-outline-variant/40 hover:bg-surface-container-highest transition-all-200">
+                            <div class="flex h-6 items-center">
+                                <input type="radio" name="ProductStatus" value="false"
+                                       class="h-4 w-4 border-outline-variant text-primary focus:ring-primary bg-white" />
+                            </div>
+                            <div class="flex flex-col">
+                                <span class="block text-sm font-medium text-on-surface">Pasif</span>
+                                <span class="block text-xs text-secondary mt-0.5">Menüde gizlenir, sipariş edilemez.</span>
+                            </div>
+                        </label>
+
+                    </div>
+                </fieldset>
+
+            </div>
+
+        </div>
+
+        <!-- Action Buttons -->
+        <div class="mt-12 pt-8 border-t border-outline-variant/40 flex items-center justify-end space-x-4">
+            <a asp-controller="Product" asp-action="ProductList"
+               class="px-6 py-3 rounded-lg font-label font-bold text-on-surface-variant bg-transparent border border-outline-variant hover:bg-surface-container-high hover:text-on-surface hover:border-outline transition-all-200">
+                Vazgeç
+            </a>
+            <button type="submit"
+                    class="px-8 py-3 rounded-lg font-label font-bold text-on-primary bg-primary hover:bg-on-primary-fixed-variant shadow-sm hover:shadow-md active:scale-[0.98] transition-all-200 flex items-center">
+                <span class="material-symbols-outlined mr-2 text-lg">save</span>
+                Kaydet
+            </button>
+        </div>
+
+    </form>
+
+</main>

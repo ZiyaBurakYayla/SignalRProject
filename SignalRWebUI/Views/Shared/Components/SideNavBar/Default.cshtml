@@ -1,0 +1,160 @@
+<nav class="bg-surface h-screen w-64 fixed left-0 top-0 z-50 flex flex-col border-r border-border hidden md:flex">
+    <div class="flex flex-col h-full py-8">
+
+        <!-- Logo -->
+        <div class="px-6 mb-8 flex items-center gap-4">
+            <div class="w-12 h-12 rounded-full bg-surface-alt border border-border flex items-center justify-center text-primary">
+                <span class="material-symbols-outlined text-2xl">restaurant</span>
+            </div>
+            <div>
+                <h2 class="font-bold text-text text-sm tracking-wide">SAHARA RESTORAN</h2>
+                <p class="text-text-muted text-xs">Yönetici Paneli</p>
+            </div>
+        </div>
+
+        <!-- Nav Links -->
+        <div class="flex-1 overflow-y-auto no-scrollbar px-4 space-y-1">
+
+            <!-- Genel Bakış -->
+            <a asp-controller="Dashboard" asp-action="Index"
+               class="flex items-center gap-3 py-3 px-4 text-text-muted hover:bg-surface-alt hover:text-text rounded-lg transition-all duration-150">
+                <span class="material-symbols-outlined">dashboard</span>
+                <span class="text-sm">Genel Bakış</span>
+            </a>
+
+            <!-- Kategori -->
+            <a asp-controller="Category" asp-action="CategoryList"
+               class="flex items-center gap-3 py-3 px-4 text-text-muted hover:bg-surface-alt hover:text-text rounded-lg transition-all duration-150">
+                <span class="material-symbols-outlined">category</span>
+                <span class="text-sm">Kategoriler</span>
+            </a>
+
+            <!-- Ürünler -->
+            <a asp-controller="Product" asp-action="ProductList"
+               class="flex items-center gap-3 py-3 px-4 text-text-muted hover:bg-surface-alt hover:text-text rounded-lg transition-all duration-150">
+                <span class="material-symbols-outlined">restaurant_menu</span>
+                <span class="text-sm">Ürünler</span>
+            </a>
+
+            <!-- Rezervasyonlar -->
+            <a asp-controller="Booking" asp-action="BookingList"
+               class="flex items-center gap-3 py-3 px-4 text-text-muted hover:bg-surface-alt hover:text-text rounded-lg transition-all duration-150">
+                <span class="material-symbols-outlined">event_seat</span>
+                <span class="text-sm">Rezervasyonlar</span>
+            </a>
+
+            <!-- İndirimler -->
+            <a asp-controller="Discount" asp-action="DiscountList"
+               class="flex items-center gap-3 py-3 px-4 text-text-muted hover:bg-surface-alt hover:text-text rounded-lg transition-all duration-150">
+                <span class="material-symbols-outlined">local_offer</span>
+                <span class="text-sm">İndirimler</span>
+            </a>
+
+            <!-- Slider -->
+            <a asp-controller="Slider" asp-action="SliderList"
+               class="flex items-center gap-3 py-3 px-4 text-text-muted hover:bg-surface-alt hover:text-text rounded-lg transition-all duration-150">
+                <span class="material-symbols-outlined">view_carousel</span>
+                <span class="text-sm">Slider</span>
+            </a>
+
+            <!-- Müşteri Yorumları -->
+            <a asp-controller="Testimonial" asp-action="TestimonialList"
+               class="flex items-center gap-3 py-3 px-4 text-text-muted hover:bg-surface-alt hover:text-text rounded-lg transition-all duration-150">
+                <span class="material-symbols-outlined">chat_bubble</span>
+                <span class="text-sm">Müşteri Yorumları</span>
+            </a>
+
+            <!-- Sosyal Medya -->
+            <a asp-controller="SocialMedia" asp-action="SocialMediaList"
+               class="flex items-center gap-3 py-3 px-4 text-text-muted hover:bg-surface-alt hover:text-text rounded-lg transition-all duration-150">
+                <span class="material-symbols-outlined">share</span>
+                <span class="text-sm">Sosyal Medya</span>
+            </a>
+
+            <!-- Hakkımızda -->
+            <a asp-controller="About" asp-action="AboutList"
+               class="flex items-center gap-3 py-3 px-4 text-text-muted hover:bg-surface-alt hover:text-text rounded-lg transition-all duration-150">
+                <span class="material-symbols-outlined">info</span>
+                <span class="text-sm">Hakkımızda</span>
+            </a>
+
+            <!-- İletişim -->
+            <a asp-controller="Contact" asp-action="ContactList"
+               class="flex items-center gap-3 py-3 px-4 text-text-muted hover:bg-surface-alt hover:text-text rounded-lg transition-all duration-150">
+                <span class="material-symbols-outlined">contacts</span>
+                <span class="text-sm">İletişim</span>
+            </a>
+
+            <!-- Masalar -->
+            <a asp-controller="OrderTable" asp-action="OrderTableList"
+               class="flex items-center gap-3 py-3 px-4 text-text-muted hover:bg-surface-alt hover:text-text rounded-lg transition-all duration-150">
+                <span class="material-symbols-outlined">chair</span>
+                <span class="text-sm">Masalar</span>
+            </a>
+
+            <!-- Bildirimler -->
+            <a asp-controller="Notification" asp-action="NotificationList"
+               class="flex items-center gap-3 py-3 px-4 text-text-muted hover:bg-surface-alt hover:text-text rounded-lg transition-all duration-150">
+                <span class="material-symbols-outlined">notifications</span>
+                <span class="text-sm">Bildirimler</span>
+            </a>
+
+            <!-- Performans Özeti -->
+            <a asp-controller="ProgressBars" asp-action="Index"
+               class="flex items-center gap-3 py-3 px-4 text-text-muted hover:bg-surface-alt hover:text-text rounded-lg transition-all duration-150">
+                <span class="material-symbols-outlined">bar_chart</span>
+                <span class="text-sm">Performans Özeti</span>
+            </a>
+
+            <!-- E-posta -->
+            <a asp-controller="Mail" asp-action="Index"
+               class="flex items-center gap-3 py-3 px-4 text-text-muted hover:bg-surface-alt hover:text-text rounded-lg transition-all duration-150">
+                <span class="material-symbols-outlined">mail</span>
+                <span class="text-sm">E-posta Gönder</span>
+            </a>
+
+            <!-- QR Kod dropdown -->
+            <details class="group">
+                <summary class="flex items-center gap-3 py-3 px-4 text-text-muted hover:bg-surface-alt hover:text-text rounded-lg transition-all duration-150 cursor-pointer list-none">
+                    <span class="material-symbols-outlined">qr_code_2</span>
+                    <span class="text-sm flex-1">QR Kod</span>
+                    <span class="material-symbols-outlined text-base transition-transform duration-200 group-open:rotate-180">expand_more</span>
+                </summary>
+                <div class="ml-9 mt-1 space-y-1 border-l border-border pl-3">
+                    <a asp-controller="QrCode" asp-action="Index"
+                       class="flex items-center gap-2 py-2 px-3 text-text-muted hover:bg-surface-alt hover:text-text rounded-lg transition-all duration-150 text-sm">
+                        <span class="material-symbols-outlined text-base">qr_code</span>
+                        QR Oluştur
+                    </a>
+                    <a asp-controller="QrCode" asp-action="Decode"
+                       class="flex items-center gap-2 py-2 px-3 text-text-muted hover:bg-surface-alt hover:text-text rounded-lg transition-all duration-150 text-sm">
+                        <span class="material-symbols-outlined text-base">qr_code_scanner</span>
+                        QR Çözümle
+                    </a>
+                </div>
+            </details>
+
+        </div>
+
+        <!-- Bottom Links -->
+        <div class="px-4 space-y-1 mt-4 pt-4 border-t border-border">
+            <a class="flex items-center gap-3 py-3 px-4 text-text-muted hover:bg-surface-alt hover:text-text rounded-lg transition-all duration-150" asp-controller="Default" asp-action="Index">
+                <span class="material-symbols-outlined">open_in_new</span>
+                <span class="text-sm">Siteye Git</span>
+            </a>
+            <a class="flex items-center gap-3 py-3 px-4 text-text-muted hover:bg-surface-alt hover:text-text rounded-lg transition-all duration-150" asp-controller="Setting" asp-action="Index">
+                <span class="material-symbols-outlined">manage_accounts</span>
+                <span class="text-sm">Profil Ayarları</span>
+            </a>
+            <a class="flex items-center gap-3 py-3 px-4 text-text-muted hover:bg-surface-alt hover:text-text rounded-lg transition-all duration-150" href="#">
+                <span class="material-symbols-outlined">help</span>
+                <span class="text-sm">Yardım</span>
+            </a>
+            <a class="flex items-center gap-3 py-3 px-4 text-text-muted hover:bg-surface-alt hover:text-text rounded-lg transition-all duration-150" asp-controller="Login" asp-action="LogOut">
+                <span class="material-symbols-outlined">logout</span>
+                <span class="text-sm">Çıkış Yap</span>
+            </a>
+        </div>
+
+    </div>
+</nav>

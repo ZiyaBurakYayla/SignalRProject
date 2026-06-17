@@ -1,0 +1,129 @@
+@using SignalRWebUI.Dtos.NotificationDtos
+@model List<ResultNotificationDto>
+@{
+    ViewData["Title"] = "Bildirim Yönetimi";
+}
+
+<style>
+    .material-symbols-outlined { font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24; }
+    .shadow-soft { box-shadow: 0 2px 16px rgba(58, 48, 42, 0.04); }
+    .table-scroll::-webkit-scrollbar { height: 6px; }
+    .table-scroll::-webkit-scrollbar-track { background: #f2ece4; }
+    .table-scroll::-webkit-scrollbar-thumb { background-color: #d8d0c8; border-radius: 9999px; }
+</style>
+
+<main class="admin-page">
+
+    <header class="admin-header">
+        <div>
+            <p class="admin-badge">Sahara Admin</p>
+            <h1 class="admin-title">Bildirim Yönetimi</h1>
+            <p class="admin-subtitle">Tüm bildirimleri görüntüleyin ve yönetin.</p>
+        </div>
+        <a asp-controller="Notification" asp-action="CreateNotification" class="admin-btn-add">
+            <span class="material-symbols-outlined">add</span>
+            Yeni Bildirim
+        </a>
+    </header>
+
+    <div class="bg-surface-container-low rounded-xl border border-outline-variant/40 shadow-soft overflow-hidden">
+        <div class="overflow-x-auto table-scroll">
+            <table class="w-full text-left border-collapse whitespace-nowrap">
+                <thead>
+                    <tr class="border-b border-outline-variant/60 bg-surface-container/50">
+                        <th class="px-6 py-4 font-label text-xs uppercase tracking-wider text-on-surface-variant font-semibold">#ID</th>
+                        <th class="px-6 py-4 font-label text-xs uppercase tracking-wider text-on-surface-variant font-semibold">İkon</th>
+                        <th class="px-6 py-4 font-label text-xs uppercase tracking-wider text-on-surface-variant font-semibold">Açıklama</th>
+                        <th class="px-6 py-4 font-label text-xs uppercase tracking-wider text-on-surface-variant font-semibold">Tür</th>
+                        <th class="px-6 py-4 font-label text-xs uppercase tracking-wider text-on-surface-variant font-semibold">Tarih</th>
+                        <th class="px-6 py-4 font-label text-xs uppercase tracking-wider text-on-surface-variant font-semibold">Durum</th>
+                        <th class="px-6 py-4 font-label text-xs uppercase tracking-wider text-on-surface-variant font-semibold text-right">İşlemler</th>
+                    </tr>
+                </thead>
+                <tbody class="divide-y divide-outline-variant/30 font-body text-sm text-on-surface">
+                    @if (Model != null && Model.Any())
+                    {
+                        @foreach (var item in Model)
+                        {
+                            <tr class="hover:bg-surface-container transition-colors group">
+                                <td class="px-6 py-4 font-medium text-primary">#@item.NotificationId</td>
+                                <td class="px-6 py-4">
+                                    <div class="w-8 h-8 rounded-full bg-primary/10 text-primary flex items-center justify-center">
+                                        <span class="material-symbols-outlined text-[18px]">@item.NotificationIcon</span>
+                                    </div>
+                                </td>
+                                <td class="px-6 py-4 max-w-xs truncate">@item.Description</td>
+                                <td class="px-6 py-4">
+                                    <span class="inline-flex items-center px-2.5 py-1 rounded-md text-xs font-semibold bg-secondary-container text-on-secondary-container">
+                                        @item.NotificationType
+                                    </span>
+                                </td>
+                                <td class="px-6 py-4 text-on-surface-variant">
+                                    @item.NotificationDate.ToString("dd MMM yyyy HH:mm")
+                                </td>
+                                <td class="px-6 py-4">
+                                    @if (item.Status)
+                                    {
+                                        <span class="inline-flex items-center gap-1 px-2.5 py-1 rounded-md text-xs font-semibold bg-green-100 text-green-700">
+                                            <span class="material-symbols-outlined text-[14px]">check_circle</span> Okundu
+                                        </span>
+                                    }
+                                    else
+                                    {
+                                        <span class="inline-flex items-center gap-1 px-2.5 py-1 rounded-md text-xs font-semibold bg-red-100 text-red-600">
+                                            <span class="material-symbols-outlined text-[14px]">notifications_active</span> Yeni
+                                        </span>
+                                    }
+                                </td>
+                                <td class="px-6 py-4 text-right">
+                                    <div class="inline-flex gap-2 opacity-0 group-hover:opacity-100 transition-opacity">
+                                        @if (item.Status)
+                                        {
+                                            <a asp-controller="Notification" asp-action="NotificationChangeToFalse" asp-route-id="@item.NotificationId"
+                                               class="p-1.5 text-green-600 hover:text-orange-500 transition-colors rounded-md hover:bg-surface-container-highest" title="Okunmadı İşaretle">
+                                                <span class="material-symbols-outlined text-[20px]">mark_email_unread</span>
+                                            </a>
+                                        }
+                                        else
+                                        {
+                                            <a asp-controller="Notification" asp-action="NotificationChangeToTrue" asp-route-id="@item.NotificationId"
+                                               class="p-1.5 text-red-500 hover:text-green-600 transition-colors rounded-md hover:bg-surface-container-highest" title="Okundu İşaretle">
+                                                <span class="material-symbols-outlined text-[20px]">mark_email_read</span>
+                                            </a>
+                                        }
+                                        <a asp-controller="Notification" asp-action="UpdateNotification" asp-route-id="@item.NotificationId"
+                                           class="p-1.5 text-on-surface-variant hover:text-primary transition-colors rounded-md hover:bg-surface-container-highest" title="Düzenle">
+                                            <span class="material-symbols-outlined text-[20px]">edit</span>
+                                        </a>
+                                        <a asp-controller="Notification" asp-action="DeleteNotification" asp-route-id="@item.NotificationId"
+                                           class="p-1.5 text-on-surface-variant hover:text-error transition-colors rounded-md hover:bg-error-container" title="Sil">
+                                            <span class="material-symbols-outlined text-[20px]">delete</span>
+                                        </a>
+                                    </div>
+                                </td>
+                            </tr>
+                        }
+                    }
+                    else
+                    {
+                        <tr>
+                            <td colspan="7" class="px-6 py-20 text-center">
+                                <div class="flex flex-col items-center justify-center text-secondary gap-3">
+                                    <span class="material-symbols-outlined text-[3rem] opacity-50">notifications_off</span>
+                                    <p class="font-label text-sm">Henüz bildirim bulunmuyor.</p>
+                                </div>
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+
+        <div class="px-6 py-4 border-t border-outline-variant/60 flex items-center justify-between bg-surface-container/30">
+            <span class="font-body text-sm text-on-surface-variant">
+                Toplam <span class="font-medium text-on-surface">@(Model?.Count ?? 0)</span> bildirim
+            </span>
+        </div>
+    </div>
+
+</main>

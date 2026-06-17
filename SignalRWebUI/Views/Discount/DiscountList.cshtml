@@ -1,0 +1,161 @@
+@model List<ResultDiscountDto>
+@{
+    ViewData["Title"] = "İndirim Yönetimi";
+}
+
+<style>
+    .material-symbols-outlined { font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24; }
+</style>
+
+<main class="admin-page">
+
+    <!-- Header -->
+    <header class="admin-header">
+        <div>
+            <p class="admin-badge">Sahara Admin</p>
+            <h1 class="admin-title">İndirim Yönetimi</h1>
+            <p class="admin-subtitle">Aktif indirim kampanyalarını görüntüleyin ve yönetin.</p>
+        </div>
+        <a asp-controller="Discount" asp-action="CreateDiscount" class="admin-btn-add">
+            <span class="material-symbols-outlined">add</span>
+            Yeni İndirim Ekle
+        </a>
+    </header>
+
+    <!-- Table Card -->
+    <div class="bg-surface-container-lowest rounded-xl shadow-[0_2px_16px_rgba(58,48,42,0.04)] overflow-hidden border border-outline-variant/60">
+        <div class="overflow-x-auto">
+            <table class="w-full text-left border-collapse">
+                <thead>
+                    <tr class="bg-surface-container-low border-b border-outline-variant/60">
+                        <th class="py-4 px-6 font-label font-semibold text-on-surface-variant text-sm uppercase tracking-wider">Görsel</th>
+                        <th class="py-4 px-6 font-label font-semibold text-on-surface-variant text-sm uppercase tracking-wider">Başlık</th>
+                        <th class="py-4 px-6 font-label font-semibold text-on-surface-variant text-sm uppercase tracking-wider">Açıklama</th>
+                        <th class="py-4 px-6 font-label font-semibold text-on-surface-variant text-sm uppercase tracking-wider">İndirim Tutarı</th>
+                        <th class="py-4 px-6 font-label font-semibold text-on-surface-variant text-sm uppercase tracking-wider">Durum</th>
+                        <th class="py-4 px-6 font-label font-semibold text-on-surface-variant text-sm uppercase tracking-wider text-right">İşlemler</th>
+                    </tr>
+                </thead>
+                <tbody class="divide-y divide-outline-variant/40">
+
+                    @if (Model != null && Model.Any())
+                    {
+                        @foreach (var item in Model)
+                        {
+                            <tr class="hover:bg-surface-bright/50 transition-colors">
+
+                                <!-- Görsel -->
+                                <td class="py-4 px-6">
+                                    <div class="w-16 h-16 rounded-lg overflow-hidden border border-outline-variant/40 bg-surface-variant">
+                                        @if (!string.IsNullOrEmpty(item.DiscountImageUrl))
+                                        {
+                                            <img src="@item.DiscountImageUrl" alt="@item.Title"
+                                                 class="w-full h-full object-cover" />
+                                        }
+                                        else
+                                        {
+                                            <div class="w-full h-full flex items-center justify-center text-outline-variant bg-surface-container-high">
+                                                <span class="material-symbols-outlined">image</span>
+                                            </div>
+                                        }
+                                    </div>
+                                </td>
+
+                                <!-- Başlık -->
+                                <td class="py-4 px-6">
+                                    <div class="font-headline text-xl text-on-surface font-semibold">@item.Title</div>
+                                    <div class="font-body text-xs text-on-surface-variant mt-1">ID: @item.DiscountId</div>
+                                </td>
+
+                                <!-- Açıklama -->
+                                <td class="py-4 px-6">
+                                    <p class="font-body text-sm text-on-surface-variant max-w-xs truncate">@item.DiscountDescription</p>
+                                </td>
+
+                                <!-- İndirim Tutarı -->
+                                <td class="py-4 px-6">
+                                    <span class="inline-flex items-center px-3 py-1 rounded-full bg-primary-fixed text-on-primary-fixed-variant font-label font-bold text-sm">
+                                        @item.DiscountAmount
+                                    </span>
+                                </td>
+
+                                <!-- Durum -->
+                                <td class="py-4 px-6">
+                                    @if (item.Status)
+                                    {
+                                        <span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-green-100 text-green-700 font-label font-semibold text-xs">
+                                            <span class="w-1.5 h-1.5 rounded-full bg-green-500"></span>
+                                            Aktif
+                                        </span>
+                                    }
+                                    else
+                                    {
+                                        <span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-red-100 text-red-700 font-label font-semibold text-xs">
+                                            <span class="w-1.5 h-1.5 rounded-full bg-red-500"></span>
+                                            Pasif
+                                        </span>
+                                    }
+                                </td>
+
+                                <!-- İşlemler -->
+                                <td class="py-4 px-6 text-right">
+                                    <div class="flex items-center justify-end gap-2">
+                                        @if (item.Status)
+                                        {
+                                            <a asp-controller="Discount" asp-action="DiscountChangeStatusToFalse" asp-route-id="@item.DiscountId"
+                                               class="p-2 text-red-500 hover:text-red-700 transition-colors rounded-full hover:bg-red-50" title="Pasife Al">
+                                                <span class="material-symbols-outlined text-[20px]">toggle_on</span>
+                                            </a>
+                                        }
+                                        else
+                                        {
+                                            <a asp-controller="Discount" asp-action="DiscountChangeStatusToTrue" asp-route-id="@item.DiscountId"
+                                               class="p-2 text-green-600 hover:text-green-800 transition-colors rounded-full hover:bg-green-50" title="Aktife Al">
+                                                <span class="material-symbols-outlined text-[20px]">toggle_off</span>
+                                            </a>
+                                        }
+                                        <a asp-controller="Discount" asp-action="UpdateDiscount" asp-route-id="@item.DiscountId"
+                                           class="p-2 text-on-surface-variant hover:text-primary transition-colors rounded-full hover:bg-surface-container" title="Düzenle">
+                                            <span class="material-symbols-outlined text-[20px]">edit</span>
+                                        </a>
+                                        <a asp-controller="Discount" asp-action="DeleteDiscount" asp-route-id="@item.DiscountId"
+                                           class="p-2 text-on-surface-variant hover:text-error transition-colors rounded-full hover:bg-error-container/50" title="Sil">
+                                            <span class="material-symbols-outlined text-[20px]">delete</span>
+                                        </a>
+                                    </div>
+                                </td>
+
+                            </tr>
+                        }
+                    }
+                    else
+                    {
+                        <tr>
+                            <td colspan="6" class="py-20 text-center">
+                                <div class="flex flex-col items-center justify-center text-secondary gap-3">
+                                    <span class="material-symbols-outlined text-[3rem] opacity-50">local_offer</span>
+                                    <p class="font-label text-sm">Henüz indirim kampanyası bulunmuyor.</p>
+                                </div>
+                            </td>
+                        </tr>
+                    }
+
+                </tbody>
+            </table>
+        </div>
+
+        <!-- Footer -->
+        <div class="border-t border-outline-variant/60 p-4 bg-surface-container-lowest flex items-center justify-between text-sm font-label text-on-surface-variant">
+            <span>Toplam: <span class="font-medium text-on-surface">@(Model?.Count ?? 0)</span> kayıt</span>
+            <div class="flex gap-1">
+                <button class="p-1 text-outline hover:text-primary disabled:opacity-50" disabled>
+                    <span class="material-symbols-outlined text-[20px]">chevron_left</span>
+                </button>
+                <button class="p-1 text-outline hover:text-primary disabled:opacity-50" disabled>
+                    <span class="material-symbols-outlined text-[20px]">chevron_right</span>
+                </button>
+            </div>
+        </div>
+    </div>
+
+</main>

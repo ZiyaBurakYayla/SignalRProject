@@ -1,0 +1,107 @@
+@model UpdateSocialMediaDto
+@{
+    ViewData["Title"] = "Sosyal Medya Güncelle";
+}
+
+<style>
+    .material-symbols-outlined { font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24; }
+</style>
+
+<main class="w-full max-w-2xl mx-auto bg-surface-container-low rounded-xl shadow-[0_2px_16px_rgba(58,48,42,0.04)] p-10 border border-outline-variant/60 my-10">
+
+    <header class="mb-10 text-center space-y-3">
+        <h1 class="font-headline text-4xl font-bold text-on-surface tracking-tight">
+            Sosyal Medya Hesabını Güncelle
+        </h1>
+        <p class="text-on-surface-variant font-body">
+            Mevcut sosyal medya bağlantınızı düzenleyin. Detayları güncel tutmak, etkileşimi artırır.
+        </p>
+    </header>
+
+    <form asp-controller="SocialMedia" asp-action="UpdateSocialMedia" method="post" class="space-y-8">
+
+        <input type="hidden" asp-for="SocialMediaId" />
+
+        <div class="space-y-6">
+
+            <!-- Platform Adı -->
+            <div>
+                <label asp-for="Title" class="block text-sm font-semibold text-on-surface mb-2 font-label">Platform Adı</label>
+                <div class="relative">
+                    <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                        <span class="material-symbols-outlined text-on-surface-variant/70 text-xl">title</span>
+                    </div>
+                    <input asp-for="Title"
+                           class="block w-full pl-10 pr-3 py-3 border border-outline-variant rounded-lg bg-surface-container-lowest text-on-surface font-body focus:ring-2 focus:ring-primary focus:border-primary transition-colors sm:text-sm outline-none"
+                           placeholder="Örn: Instagram, Twitter" />
+                </div>
+                <span asp-validation-for="Title" class="text-error text-xs mt-1 block"></span>
+            </div>
+
+            <!-- URL -->
+            <div>
+                <label asp-for="Url" class="block text-sm font-semibold text-on-surface mb-2 font-label">Bağlantı URL'si</label>
+                <div class="relative">
+                    <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                        <span class="material-symbols-outlined text-on-surface-variant/70 text-xl">link</span>
+                    </div>
+                    <input asp-for="Url" type="url"
+                           class="block w-full pl-10 pr-3 py-3 border border-outline-variant rounded-lg bg-surface-container-lowest text-on-surface font-body focus:ring-2 focus:ring-primary focus:border-primary transition-colors sm:text-sm outline-none"
+                           placeholder="https://..." />
+                </div>
+            </div>
+
+            <!-- İkon -->
+            <div>
+                <label asp-for="Icon" class="block text-sm font-semibold text-on-surface mb-2 font-label">İkon (Material Symbol)</label>
+                <div class="relative">
+                    <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                        <span id="iconPreview" class="material-symbols-outlined text-on-surface-variant/70 text-xl">@(Model?.Icon ?? "emoji_symbols")</span>
+                    </div>
+                    <input asp-for="Icon" id="iconInput"
+                           class="block w-full pl-10 pr-3 py-3 border border-outline-variant rounded-lg bg-surface-container-lowest text-on-surface font-body focus:ring-2 focus:ring-primary focus:border-primary transition-colors sm:text-sm outline-none"
+                           placeholder="Örn: photo_camera, share" />
+                </div>
+                <p class="mt-2 text-xs text-on-surface-variant">Material Symbols kütüphanesinden bir ikon adı girin. Canlı önizleme solda görünür.</p>
+            </div>
+
+            <!-- Durum Toggle -->
+            <div class="flex items-center justify-between pt-4 border-t border-outline-variant/40">
+                <div class="flex flex-col">
+                    <span class="text-sm font-semibold text-on-surface font-label">Görünürlük Durumu</span>
+                    <span class="text-sm text-on-surface-variant">Bu sosyal medya hesabı menüde gösterilsin mi?</span>
+                </div>
+                <label class="relative inline-flex items-center cursor-pointer">
+                    <input asp-for="Status" type="checkbox" class="sr-only peer" />
+                    <div class="w-11 h-6 bg-surface-variant rounded-full peer peer-focus:ring-4 peer-focus:ring-primary-container peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-0.5 after:left-[2px] after:bg-white after:border after:border-gray-300 after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-primary"></div>
+                </label>
+            </div>
+
+        </div>
+
+        <!-- Actions -->
+        <div class="pt-6 border-t border-outline-variant/40 flex justify-end gap-4">
+            <a asp-controller="SocialMedia" asp-action="SocialMediaList"
+               class="px-6 py-2.5 border border-outline-variant text-on-surface-variant font-medium rounded-lg hover:bg-surface-variant/50 transition-colors duration-200">
+                İptal
+            </a>
+            <button type="submit"
+                    class="px-6 py-2.5 bg-primary text-on-primary font-medium rounded-lg shadow-sm hover:bg-on-primary-fixed-variant transition-colors duration-200 flex items-center gap-2">
+                <span class="material-symbols-outlined text-sm">save</span>
+                Güncelle
+            </button>
+        </div>
+
+    </form>
+
+</main>
+
+<script>
+    const iconInput = document.getElementById('iconInput');
+    const iconPreview = document.getElementById('iconPreview');
+
+    iconInput.addEventListener('input', function () {
+        const val = this.value.trim();
+        iconPreview.textContent = val || 'emoji_symbols';
+    });
+</script>

@@ -1,0 +1,133 @@
+@model List<ResultCategoryDto>
+@{
+    ViewData["Title"] = "Kategori Yönetimi";
+}
+
+<style>
+    .material-symbols-outlined {
+        font-variation-settings: 'FILL' 0, 'wght' 300, 'GRAD' 0, 'opsz' 24;
+    }
+    .custom-scrollbar::-webkit-scrollbar { width: 6px; height: 6px; }
+    .custom-scrollbar::-webkit-scrollbar-track { background: transparent; }
+    .custom-scrollbar::-webkit-scrollbar-thumb {
+        background-color: #d8d0c8;
+        border-radius: 9999px;
+    }
+</style>
+
+<main class="admin-page">
+
+    <!-- Header Section -->
+    <header class="admin-header">
+        <div>
+            <p class="admin-badge">Sahara Admin</p>
+            <h1 class="admin-title">Kategori Yönetimi</h1>
+            <p class="admin-subtitle">Menü kategorilerini oluşturun, düzenleyin ve yönetin.</p>
+        </div>
+        <a asp-controller="Category" asp-action="CreateCategory" class="admin-btn-add">
+            <span class="material-symbols-outlined">add</span>
+            Yeni Kategori Ekle
+        </a>
+    </header>
+
+    <!-- Search and Filter Bar -->
+    <section class="bg-surface-container-low rounded-xl p-4 mb-8 border border-outline-variant/60 shadow-[0_2px_16px_rgba(58,48,42,0.04)]">
+        <div class="flex flex-col md:flex-row gap-4 items-center">
+            <div class="relative w-full md:max-w-md">
+                <span class="material-symbols-outlined absolute left-4 top-1/2 -translate-y-1/2 text-secondary">search</span>
+                <input class="w-full bg-surface-container-lowest border border-outline-variant/50 focus:border-primary focus:ring-1 focus:ring-primary rounded-lg pl-12 pr-4 py-3 text-on-surface placeholder:text-secondary/70 transition-all font-body text-sm outline-none"
+                       placeholder="Kategori ara..." type="text" id="searchInput" />
+            </div>
+            <div class="flex items-center gap-3 w-full md:w-auto md:ml-auto">
+                <button class="flex items-center gap-2 text-on-surface-variant hover:text-primary px-4 py-3 rounded-lg border border-outline-variant/50 bg-surface hover:bg-surface-container transition-all text-sm font-medium">
+                    <span class="material-symbols-outlined text-[18px]">filter_list</span>
+                    Filtrele
+                </button>
+                <button class="flex items-center gap-2 text-on-surface-variant hover:text-primary px-4 py-3 rounded-lg border border-outline-variant/50 bg-surface hover:bg-surface-container transition-all text-sm font-medium">
+                    <span class="material-symbols-outlined text-[18px]">sort</span>
+                    Sırala
+                </button>
+            </div>
+        </div>
+    </section>
+
+    <!-- Data Table -->
+    <section class="bg-surface-container-lowest rounded-xl border border-outline-variant/60 shadow-[0_2px_16px_rgba(58,48,42,0.04)] overflow-hidden">
+        <div class="overflow-x-auto custom-scrollbar">
+            <table class="w-full text-left border-collapse min-w-[600px]">
+                <thead>
+                    <tr class="bg-surface-container-low border-b border-outline-variant/60">
+                        <th class="py-4 px-6 font-label font-semibold text-secondary text-xs uppercase tracking-wider w-24">ID</th>
+                        <th class="py-4 px-6 font-label font-semibold text-secondary text-xs uppercase tracking-wider">Kategori Adı</th>
+                        <th class="py-4 px-6 font-label font-semibold text-secondary text-xs uppercase tracking-wider w-40">Durum</th>
+                        <th class="py-4 px-6 font-label font-semibold text-secondary text-xs uppercase tracking-wider text-right w-32">İşlemler</th>
+                    </tr>
+                </thead>
+                <tbody class="divide-y divide-outline-variant/40">
+                    @if (Model != null && Model.Any())
+                    {
+                        @foreach (var item in Model)
+                        {
+                            <tr class="hover:bg-surface-container-low/50 transition-colors group @(item.CategoryStatus ? "" : "bg-surface-container-highest/20")">
+                                <td class="py-4 px-6 font-body text-sm @(item.CategoryStatus ? "text-on-surface-variant" : "text-on-surface-variant/70")">#@item.CategoryId</td>
+                                <td class="py-4 px-6 font-body font-medium @(item.CategoryStatus ? "text-on-surface" : "text-on-surface/70")">@item.CategoryName</td>
+                                <td class="py-4 px-6">
+                                    @if (item.CategoryStatus)
+                                    {
+                                        <span class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-primary-fixed text-on-primary-fixed-variant text-xs font-semibold">
+                                            <span class="w-1.5 h-1.5 rounded-full bg-primary"></span>
+                                            Aktif
+                                        </span>
+                                    }
+                                    else
+                                    {
+                                        <span class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-surface-container-high text-secondary text-xs font-semibold border border-outline-variant/40">
+                                            <span class="w-1.5 h-1.5 rounded-full bg-secondary"></span>
+                                            Pasif
+                                        </span>
+                                    }
+                                </td>
+                                <td class="py-4 px-6 text-right">
+                                    <div class="flex justify-end gap-2 opacity-70 group-hover:opacity-100 transition-opacity">
+                                        <a asp-controller="Category" asp-action="UpdateCategory" asp-route-id="@item.CategoryId"
+                                           class="p-2 text-secondary hover:text-primary hover:bg-primary-container/10 rounded-lg transition-colors" title="Düzenle">
+                                            <span class="material-symbols-outlined text-[20px]">edit</span>
+                                        </a>
+                                        <a asp-controller="Category" asp-action="DeleteCategory" asp-route-id="@item.CategoryId"
+                                           class="p-2 text-secondary hover:text-error hover:bg-error-container/20 rounded-lg transition-colors" title="Sil">
+                                            <span class="material-symbols-outlined text-[20px]">delete</span>
+                                        </a>
+                                    </div>
+                                </td>
+                            </tr>
+                        }
+                    }
+                    else
+                    {
+                        <tr>
+                            <td colspan="4" class="py-16 text-center text-secondary font-body">
+                                <span class="material-symbols-outlined text-[48px] block mb-3 mx-auto">category</span>
+                                Henüz kategori bulunmuyor.
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+
+        <!-- Pagination Footer -->
+        <div class="border-t border-outline-variant/60 bg-surface-container-lowest p-4 flex items-center justify-between text-sm text-secondary">
+            <span>Toplam: @(Model?.Count ?? 0) kayıt</span>
+            <div class="flex gap-1">
+                <button class="p-2 rounded hover:bg-surface-container disabled:opacity-50" disabled>
+                    <span class="material-symbols-outlined text-[20px]">chevron_left</span>
+                </button>
+                <button class="px-3 py-1 rounded bg-primary text-on-primary font-medium">1</button>
+                <button class="p-2 rounded hover:bg-surface-container transition-colors">
+                    <span class="material-symbols-outlined text-[20px]">chevron_right</span>
+                </button>
+            </div>
+        </div>
+    </section>
+
+</main>

@@ -1,0 +1,157 @@
+@model UpdateBookingDto
+@{
+    ViewData["Title"] = "Rezervasyon Güncelle";
+}
+
+<style>
+    .material-symbols-outlined { font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24; }
+    .sahara-input {
+        width: 100%;
+        background-color: #ffffff;
+        border: 1px solid #d8d0c8;
+        color: #3a302a;
+        font-size: 1rem;
+        padding: 0.75rem 1rem;
+        border-radius: 0.5rem;
+        transition: border-color 0.2s, box-shadow 0.2s;
+        outline: none;
+    }
+    .sahara-input:focus {
+        border-color: #c2652a;
+        box-shadow: 0 0 0 1px #c2652a;
+    }
+    .sahara-shadow { box-shadow: 0 2px 16px rgba(58, 48, 42, 0.04); }
+</style>
+
+<main class="w-full max-w-3xl mx-auto p-4 sm:p-8">
+
+    <!-- Header -->
+    <header class="mb-10 text-center sm:text-left">
+        <a asp-controller="Booking" asp-action="BookingList"
+           class="inline-flex items-center text-secondary hover:text-primary transition-colors text-sm font-medium mb-4">
+            <span class="material-symbols-outlined mr-1" style="font-size: 18px;">arrow_back</span>
+            Rezervasyonlara Dön
+        </a>
+        <h1 class="font-headline text-4xl sm:text-5xl font-semibold tracking-tight text-on-background mb-3">
+            Rezervasyon Güncelle
+        </h1>
+        <p class="font-body text-lg text-on-surface-variant">Mevcut rezervasyon bilgilerini düzenleyin.</p>
+    </header>
+
+    <!-- Form Card -->
+    <div class="bg-surface-container-low rounded-xl sahara-shadow border border-outline-variant/60 p-6 sm:p-10">
+        <form asp-controller="Booking" asp-action="UpdateBooking" method="post" class="space-y-8">
+
+            <input type="hidden" asp-for="BookingId" />
+
+            <!-- Müşteri Bilgileri -->
+            <div class="space-y-6">
+                <h2 class="font-headline text-2xl font-medium text-primary border-b border-outline-variant/40 pb-2">
+                    Müşteri Bilgileri
+                </h2>
+                <div class="grid grid-cols-1 sm:grid-cols-2 gap-6">
+
+                    <!-- Ad Soyad -->
+                    <div>
+                        <label asp-for="Name" class="block font-label text-sm font-semibold text-on-surface mb-2">
+                            İsim Soyisim
+                        </label>
+                        <input asp-for="Name" class="sahara-input" placeholder="Ad Soyad" />
+                        <span asp-validation-for="Name" class="text-error text-xs mt-1 block"></span>
+                    </div>
+
+                    <!-- Telefon -->
+                    <div>
+                        <label asp-for="PhoneNO" class="block font-label text-sm font-semibold text-on-surface mb-2">
+                            Telefon Numarası
+                        </label>
+                        <input asp-for="PhoneNO" class="sahara-input" type="tel" placeholder="05xx xxx xx xx" />
+                        <span asp-validation-for="PhoneNO" class="text-error text-xs mt-1 block"></span>
+                    </div>
+
+                    <!-- E-posta -->
+                    <div class="sm:col-span-2">
+                        <label asp-for="Mail" class="block font-label text-sm font-semibold text-on-surface mb-2">
+                            E-posta Adresi
+                        </label>
+                        <input asp-for="Mail" class="sahara-input" type="email" placeholder="ornek@mail.com" />
+                    </div>
+
+                </div>
+            </div>
+
+            <!-- Rezervasyon Detayları -->
+            <div class="space-y-6">
+                <h2 class="font-headline text-2xl font-medium text-primary border-b border-outline-variant/40 pb-2">
+                    Rezervasyon Detayları
+                </h2>
+                <div class="grid grid-cols-1 sm:grid-cols-2 gap-6">
+
+                    <!-- Durum -->
+                    <div class="sm:col-span-2">
+                        <label asp-for="Description" class="block font-label text-sm font-semibold text-on-surface mb-2">
+                            Rezervasyon Durumu
+                        </label>
+                        <div class="relative">
+                            <select asp-for="Description" class="sahara-input appearance-none pr-10">
+                                <option value="Rezervasyon Beklemede" selected="@(Model?.Description == "Rezervasyon Beklemede" || string.IsNullOrEmpty(Model?.Description))">Beklemede</option>
+                                <option value="Rezervasyon Onaylandı" selected="@(Model?.Description == "Rezervasyon Onaylandı")">Onaylandı</option>
+                                <option value="Rezervasyon İptal Edildi" selected="@(Model?.Description == "Rezervasyon İptal Edildi")">İptal Edildi</option>
+                            </select>
+                            <div class="pointer-events-none absolute inset-y-0 right-0 flex items-center px-4 text-on-surface-variant">
+                                <span class="material-symbols-outlined text-lg">expand_more</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Kişi Sayısı -->
+                    <div>
+                        <label asp-for="PersonCount" class="block font-label text-sm font-semibold text-on-surface mb-2">
+                            Kişi Sayısı
+                        </label>
+                        <div class="relative">
+                            <select asp-for="PersonCount" class="sahara-input appearance-none pr-10">
+                                @for (int i = 1; i <= 10; i++)
+                                {
+                                    <option value="@i" @@(Model != null && Model.PersonCount == i ? "selected" : "")>
+                                        @i Kişi
+                                    </option>
+                                }
+                            </select>
+                            <div class="pointer-events-none absolute inset-y-0 right-0 flex items-center px-4 text-on-surface-variant">
+                                <span class="material-symbols-outlined text-lg">expand_more</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Tarih & Saat -->
+                    <div>
+                        <label asp-for="Date" class="block font-label text-sm font-semibold text-on-surface mb-2">
+                            Tarih &amp; Saat
+                        </label>
+                        <input asp-for="Date"
+                               class="sahara-input"
+                               type="datetime-local"
+                               value="@(Model?.Date.ToString("yyyy-MM-ddTHH:mm"))" />
+                        <span asp-validation-for="Date" class="text-error text-xs mt-1 block"></span>
+                    </div>
+
+                </div>
+            </div>
+
+            <!-- Action Buttons -->
+            <div class="pt-6 flex flex-col sm:flex-row items-center justify-end gap-4 border-t border-outline-variant/40">
+                <a asp-controller="Booking" asp-action="BookingList"
+                   class="w-full sm:w-auto px-8 py-3 rounded-lg border border-outline-variant text-on-surface font-label font-semibold hover:bg-surface-container-high transition-colors text-center">
+                    Vazgeç
+                </a>
+                <button type="submit"
+                        class="w-full sm:w-auto px-8 py-3 rounded-lg bg-primary text-on-primary font-label font-semibold hover:bg-on-primary-fixed-variant transition-colors shadow-sm">
+                    Güncelle
+                </button>
+            </div>
+
+        </form>
+    </div>
+
+</main>

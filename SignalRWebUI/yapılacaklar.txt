@@ -1,0 +1,4 @@
+proje bitince apý katmanýnda controllerda maplanmemis kýsýmlarýn maplenmesi yapoýlacak
+sidebarda link verilmemis alanlar linklenecek 
+bussýnesstaký gibi validationlar basic sekýlde yum entityler ýcýn yapýlacak 
+

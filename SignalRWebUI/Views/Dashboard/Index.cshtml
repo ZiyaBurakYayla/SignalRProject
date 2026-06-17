@@ -1,0 +1,420 @@
+@{
+    ViewData["Title"] = "Genel Bakış";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<style>
+    .material-symbols-outlined {
+        font-variation-settings: 'FILL' 0, 'wght' 300, 'GRAD' 0, 'opsz' 24;
+    }
+
+    @@keyframes pulse {
+        0%, 100% { opacity: 1; }
+        50%       { opacity: 0.4; }
+    }
+
+    .skeleton {
+        animation: pulse 1.5s ease-in-out infinite;
+        background: #ece6dc;
+        border-radius: 0.25rem;
+        display: inline-block;
+    }
+</style>
+
+<main class="admin-page">
+
+    <!-- Header Section -->
+    <header class="admin-header">
+        <div>
+            <p class="admin-badge">Sahara Admin</p>
+            <h1 class="admin-title">Genel Bakış</h1>
+            <p class="admin-subtitle">Anlık performans göstergeleri ve istatistikler.</p>
+        </div>
+        <!-- Bağlantı durumu -->
+        <div class="flex items-center gap-2">
+            <span id="connDot" class="inline-block w-2.5 h-2.5 rounded-full bg-gray-400 transition-colors duration-500"></span>
+            <span id="connstatus" class="text-sm text-text-muted font-sans">Bağlanıyor...</span>
+        </div>
+    </header>
+
+    <!-- 4x4 Widget Grid -->
+    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5">
+
+        <!-- Widget 1: Kategori Sayısı -->
+        <div class="flex flex-col justify-between p-6 rounded-xl bg-surface border border-border shadow-sm hover:shadow-md transition-shadow duration-300">
+            <div class="flex justify-between items-start mb-5">
+                <span class="text-xs font-semibold uppercase tracking-wider text-text-muted font-sans">Kategori Sayısı</span>
+                <span class="material-symbols-outlined text-primary">category</span>
+            </div>
+            <div>
+                <h3 class="font-['EB_Garamond'] text-4xl font-semibold text-text mb-1" id="categoryCount">
+                    <span class="skeleton w-16 h-8">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>
+                </h3>
+                <div class="flex items-center gap-1">
+                    <span class="material-symbols-outlined text-sm text-primary" style="font-size:16px">trending_up</span>
+                    <span class="text-xs text-text-muted font-sans">Canlı veri</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- Widget 2: Ürün Sayısı -->
+        <div class="flex flex-col justify-between p-6 rounded-xl bg-surface border border-border shadow-sm hover:shadow-md transition-shadow duration-300">
+            <div class="flex justify-between items-start mb-5">
+                <span class="text-xs font-semibold uppercase tracking-wider text-text-muted font-sans">Ürün Sayısı</span>
+                <span class="material-symbols-outlined text-primary">restaurant_menu</span>
+            </div>
+            <div>
+                <h3 class="font-['EB_Garamond'] text-4xl font-semibold text-text mb-1" id="productCount">
+                    <span class="skeleton w-16 h-8">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>
+                </h3>
+                <div class="flex items-center gap-1">
+                    <span class="material-symbols-outlined text-sm text-primary" style="font-size:16px">trending_up</span>
+                    <span class="text-xs text-text-muted font-sans">Canlı veri</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- Widget 3: Aktif Kategori -->
+        <div class="flex flex-col justify-between p-6 rounded-xl bg-surface border border-border shadow-sm hover:shadow-md transition-shadow duration-300">
+            <div class="flex justify-between items-start mb-5">
+                <span class="text-xs font-semibold uppercase tracking-wider text-text-muted font-sans">Aktif Kategori</span>
+                <span class="material-symbols-outlined text-primary">check_circle</span>
+            </div>
+            <div>
+                <h3 class="font-['EB_Garamond'] text-4xl font-semibold text-text mb-1" id="activeCategoryCount">
+                    <span class="skeleton w-16 h-8">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>
+                </h3>
+                <div class="flex items-center gap-1">
+                    <span class="material-symbols-outlined text-sm text-primary" style="font-size:16px">trending_up</span>
+                    <span class="text-xs text-text-muted font-sans">Canlı veri</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- Widget 4: Pasif Kategori -->
+        <div class="flex flex-col justify-between p-6 rounded-xl bg-surface border border-border shadow-sm hover:shadow-md transition-shadow duration-300">
+            <div class="flex justify-between items-start mb-5">
+                <span class="text-xs font-semibold uppercase tracking-wider text-text-muted font-sans">Pasif Kategori</span>
+                <span class="material-symbols-outlined text-primary">unpublished</span>
+            </div>
+            <div>
+                <h3 class="font-['EB_Garamond'] text-4xl font-semibold text-text mb-1" id="passiveCategoryCount">
+                    <span class="skeleton w-16 h-8">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>
+                </h3>
+                <div class="flex items-center gap-1">
+                    <span class="material-symbols-outlined text-sm text-primary" style="font-size:16px">trending_down</span>
+                    <span class="text-xs text-text-muted font-sans">Canlı veri</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- Widget 5: Hamburger Ürün Sayısı -->
+        <div class="flex flex-col justify-between p-6 rounded-xl bg-surface border border-border shadow-sm hover:shadow-md transition-shadow duration-300">
+            <div class="flex justify-between items-start mb-5">
+                <span class="text-xs font-semibold uppercase tracking-wider text-text-muted font-sans">Hamburger Ürün Sayısı</span>
+                <span class="material-symbols-outlined text-primary">lunch_dining</span>
+            </div>
+            <div>
+                <h3 class="font-['EB_Garamond'] text-4xl font-semibold text-text mb-1" id="CountByCategoryNameHamburger">
+                    <span class="skeleton w-16 h-8">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>
+                </h3>
+                <div class="flex items-center gap-1">
+                    <span class="material-symbols-outlined text-sm text-primary" style="font-size:16px">trending_up</span>
+                    <span class="text-xs text-text-muted font-sans">Canlı veri</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- Widget 6: İçecek Ürün Sayısı -->
+        <div class="flex flex-col justify-between p-6 rounded-xl bg-surface border border-border shadow-sm hover:shadow-md transition-shadow duration-300">
+            <div class="flex justify-between items-start mb-5">
+                <span class="text-xs font-semibold uppercase tracking-wider text-text-muted font-sans">İçecek Ürün Sayısı</span>
+                <span class="material-symbols-outlined text-primary">local_cafe</span>
+            </div>
+            <div>
+                <h3 class="font-['EB_Garamond'] text-4xl font-semibold text-text mb-1" id="CountByCategoryNameDrinks">
+                    <span class="skeleton w-16 h-8">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>
+                </h3>
+                <div class="flex items-center gap-1">
+                    <span class="material-symbols-outlined text-sm text-primary" style="font-size:16px">trending_up</span>
+                    <span class="text-xs text-text-muted font-sans">Canlı veri</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- Widget 7: Ortalama Ürün Fiyatı -->
+        <div class="flex flex-col justify-between p-6 rounded-xl bg-surface border border-border shadow-sm hover:shadow-md transition-shadow duration-300">
+            <div class="flex justify-between items-start mb-5">
+                <span class="text-xs font-semibold uppercase tracking-wider text-text-muted font-sans">Ort. Ürün Fiyatı</span>
+                <span class="material-symbols-outlined text-primary">price_check</span>
+            </div>
+            <div>
+                <h3 class="font-['EB_Garamond'] text-4xl font-semibold text-text mb-1" id="AverageProductPrice">
+                    <span class="skeleton w-16 h-8">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>
+                </h3>
+                <div class="flex items-center gap-1">
+                    <span class="material-symbols-outlined text-sm text-primary" style="font-size:16px">trending_up</span>
+                    <span class="text-xs text-text-muted font-sans">Canlı veri</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- Widget 8: En Pahalı Ürün -->
+        <div class="flex flex-col justify-between p-6 rounded-xl bg-surface border border-border shadow-sm hover:shadow-md transition-shadow duration-300">
+            <div class="flex justify-between items-start mb-5">
+                <span class="text-xs font-semibold uppercase tracking-wider text-text-muted font-sans">En Pahalı Ürün</span>
+                <span class="material-symbols-outlined text-primary">arrow_circle_up</span>
+            </div>
+            <div>
+                <h3 class="font-['EB_Garamond'] text-3xl font-semibold text-text mb-1 truncate" id="HighestPriceProductName">
+                    <span class="skeleton w-24 h-8">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>
+                </h3>
+                <div class="flex items-center gap-1">
+                    <span class="material-symbols-outlined text-sm text-primary" style="font-size:16px">trending_up</span>
+                    <span class="text-xs text-text-muted font-sans">Canlı veri</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- Widget 9: En Ucuz Ürün -->
+        <div class="flex flex-col justify-between p-6 rounded-xl bg-surface border border-border shadow-sm hover:shadow-md transition-shadow duration-300">
+            <div class="flex justify-between items-start mb-5">
+                <span class="text-xs font-semibold uppercase tracking-wider text-text-muted font-sans">En Ucuz Ürün</span>
+                <span class="material-symbols-outlined text-primary">arrow_circle_down</span>
+            </div>
+            <div>
+                <h3 class="font-['EB_Garamond'] text-3xl font-semibold text-text mb-1 truncate" id="LowestPriceProductName">
+                    <span class="skeleton w-24 h-8">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>
+                </h3>
+                <div class="flex items-center gap-1">
+                    <span class="material-symbols-outlined text-sm text-primary" style="font-size:16px">trending_down</span>
+                    <span class="text-xs text-text-muted font-sans">Canlı veri</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- Widget 10: Hamburger Ort. Fiyat -->
+        <div class="flex flex-col justify-between p-6 rounded-xl bg-surface border border-border shadow-sm hover:shadow-md transition-shadow duration-300">
+            <div class="flex justify-between items-start mb-5">
+                <span class="text-xs font-semibold uppercase tracking-wider text-text-muted font-sans">Hamburger Ort. Fiyat</span>
+                <span class="material-symbols-outlined text-primary">receipt_long</span>
+            </div>
+            <div>
+                <h3 class="font-['EB_Garamond'] text-4xl font-semibold text-text mb-1" id="AveragePriceByCategoryNameHamburger">
+                    <span class="skeleton w-16 h-8">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>
+                </h3>
+                <div class="flex items-center gap-1">
+                    <span class="material-symbols-outlined text-sm text-primary" style="font-size:16px">trending_up</span>
+                    <span class="text-xs text-text-muted font-sans">Canlı veri</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- Widget 11: Toplam Sipariş -->
+        <div class="flex flex-col justify-between p-6 rounded-xl bg-surface border border-border shadow-sm hover:shadow-md transition-shadow duration-300">
+            <div class="flex justify-between items-start mb-5">
+                <span class="text-xs font-semibold uppercase tracking-wider text-text-muted font-sans">Toplam Sipariş</span>
+                <span class="material-symbols-outlined text-primary">shopping_bag</span>
+            </div>
+            <div>
+                <h3 class="font-['EB_Garamond'] text-4xl font-semibold text-text mb-1" id="TotalOrderCount">
+                    <span class="skeleton w-16 h-8">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>
+                </h3>
+                <div class="flex items-center gap-1">
+                    <span class="material-symbols-outlined text-sm text-primary" style="font-size:16px">trending_up</span>
+                    <span class="text-xs text-text-muted font-sans">Canlı veri</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- Widget 12: Aktif Sipariş -->
+        <div class="flex flex-col justify-between p-6 rounded-xl bg-surface border border-border shadow-sm hover:shadow-md transition-shadow duration-300">
+            <div class="flex justify-between items-start mb-5">
+                <span class="text-xs font-semibold uppercase tracking-wider text-text-muted font-sans">Aktif Sipariş</span>
+                <span class="material-symbols-outlined text-primary">pending_actions</span>
+            </div>
+            <div>
+                <h3 class="font-['EB_Garamond'] text-4xl font-semibold text-text mb-1" id="ActiveOrderCount">
+                    <span class="skeleton w-16 h-8">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>
+                </h3>
+                <div class="flex items-center gap-1">
+                    <span class="material-symbols-outlined text-sm text-primary" style="font-size:16px">trending_up</span>
+                    <span class="text-xs text-text-muted font-sans">Canlı veri</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- Widget 13: Son Sipariş Tutarı -->
+        <div class="flex flex-col justify-between p-6 rounded-xl bg-surface border border-border shadow-sm hover:shadow-md transition-shadow duration-300">
+            <div class="flex justify-between items-start mb-5">
+                <span class="text-xs font-semibold uppercase tracking-wider text-text-muted font-sans">Son Sipariş Tutarı</span>
+                <span class="material-symbols-outlined text-primary">payments</span>
+            </div>
+            <div>
+                <h3 class="font-['EB_Garamond'] text-4xl font-semibold text-text mb-1" id="LastOrderPrice">
+                    <span class="skeleton w-16 h-8">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>
+                </h3>
+                <div class="flex items-center gap-1">
+                    <span class="material-symbols-outlined text-sm text-primary" style="font-size:16px">schedule</span>
+                    <span class="text-xs text-text-muted font-sans">Canlı veri</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- Widget 14: Kasa Toplamı -->
+        <div class="flex flex-col justify-between p-6 rounded-xl bg-surface border border-border shadow-sm hover:shadow-md transition-shadow duration-300">
+            <div class="flex justify-between items-start mb-5">
+                <span class="text-xs font-semibold uppercase tracking-wider text-text-muted font-sans">Kasa Toplamı</span>
+                <span class="material-symbols-outlined text-primary">point_of_sale</span>
+            </div>
+            <div>
+                <h3 class="font-['EB_Garamond'] text-4xl font-semibold text-text mb-1" id="TotalMoneyCaseAmount">
+                    <span class="skeleton w-16 h-8">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>
+                </h3>
+                <div class="flex items-center gap-1">
+                    <span class="material-symbols-outlined text-sm text-primary" style="font-size:16px">trending_up</span>
+                    <span class="text-xs text-text-muted font-sans">Canlı veri</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- Widget 15: Bugünkü Toplam -->
+        <div class="flex flex-col justify-between p-6 rounded-xl bg-surface border border-border shadow-sm hover:shadow-md transition-shadow duration-300">
+            <div class="flex justify-between items-start mb-5">
+                <span class="text-xs font-semibold uppercase tracking-wider text-text-muted font-sans">Bugünkü Toplam</span>
+                <span class="material-symbols-outlined text-primary">today</span>
+            </div>
+            <div>
+                <h3 class="font-['EB_Garamond'] text-4xl font-semibold text-text mb-1" id="TodayTotalPrice">
+                    <span class="skeleton w-16 h-8">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>
+                </h3>
+                <div class="flex items-center gap-1">
+                    <span class="material-symbols-outlined text-sm text-primary" style="font-size:16px">trending_up</span>
+                    <span class="text-xs text-text-muted font-sans">Canlı veri</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- Widget 16: Masa Sayısı -->
+        <div class="flex flex-col justify-between p-6 rounded-xl bg-surface border border-border shadow-sm hover:shadow-md transition-shadow duration-300">
+            <div class="flex justify-between items-start mb-5">
+                <span class="text-xs font-semibold uppercase tracking-wider text-text-muted font-sans">Masa Sayısı</span>
+                <span class="material-symbols-outlined text-primary">table_restaurant</span>
+            </div>
+            <div>
+                <h3 class="font-['EB_Garamond'] text-4xl font-semibold text-text mb-1" id="OrderTableCount">
+                    <span class="skeleton w-16 h-8">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>
+                </h3>
+                <div class="flex items-center gap-1">
+                    <span class="material-symbols-outlined text-sm text-primary" style="font-size:16px">trending_up</span>
+                    <span class="text-xs text-text-muted font-sans">Canlı veri</span>
+                </div>
+            </div>
+        </div>
+
+    </div>
+</main>
+
+@section Scripts {
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/microsoft-signalr/7.0.5/signalr.min.js"></script>
+    <script type="text/javascript">
+        (function () {
+            var connection = new signalR.HubConnectionBuilder()
+                .withUrl("https://localhost:7196/signalrhub")
+                .build();
+
+            function updateConnStatus(state) {
+                var dot = document.getElementById("connDot");
+                var label = document.getElementById("connstatus");
+                label.innerText = state;
+                if (state === "Connected") {
+                    dot.style.background = "#22c55e";
+                } else if (state.startsWith("Hata")) {
+                    dot.style.background = "#c0392b";
+                } else {
+                    dot.style.background = "#9a9088";
+                }
+            }
+
+            updateConnStatus(connection.state);
+
+            connection.on("ReceiveCategoryCount", function (value) {
+                document.getElementById("categoryCount").innerText = value;
+            });
+
+            connection.on("ReceiveProductCount", function (value) {
+                document.getElementById("productCount").innerText = value;
+            });
+
+            connection.on("ReceiveActiveCategoryCount", function (value) {
+                document.getElementById("activeCategoryCount").innerText = value;
+            });
+
+            connection.on("ReceivePassiveCategoryCount", function (value) {
+                document.getElementById("passiveCategoryCount").innerText = value;
+            });
+
+            connection.on("ReceiveProductCountByCategoryNameHamburger", function (value) {
+                document.getElementById("CountByCategoryNameHamburger").innerText = value;
+            });
+
+            connection.on("ReceiveProductCountByCategoryNameDrinks", function (value) {
+                document.getElementById("CountByCategoryNameDrinks").innerText = value;
+            });
+
+            connection.on("ReceiveAverageProductPrice", function (value) {
+                document.getElementById("AverageProductPrice").innerText = value;
+            });
+
+            connection.on("ReceiveHighestPriceProductName", function (value) {
+                document.getElementById("HighestPriceProductName").innerText = value;
+            });
+
+            connection.on("ReceiveLowestPriceProductName", function (value) {
+                document.getElementById("LowestPriceProductName").innerText = value;
+            });
+
+            connection.on("ReceiveAveragePriceByCategoryNameHamburger", function (value) {
+                document.getElementById("AveragePriceByCategoryNameHamburger").innerText = value;
+            });
+
+            connection.on("ReceiveTotalOrderCount", function (value) {
+                document.getElementById("TotalOrderCount").innerText = value;
+            });
+
+            connection.on("ReceiveActiveOrderCount", function (value) {
+                document.getElementById("ActiveOrderCount").innerText = value;
+            });
+
+            connection.on("ReceiveLastOrderPrice", function (value) {
+                document.getElementById("LastOrderPrice").innerText = value;
+            });
+
+            connection.on("ReceiveTotalMoneyCaseAmount", function (value) {
+                document.getElementById("TotalMoneyCaseAmount").innerText = value;
+            });
+
+            connection.on("ReceiveTodayTotalPrice", function (value) {
+                document.getElementById("TodayTotalPrice").innerText = value;
+            });
+
+            connection.on("ReceiveOrderTableCount", function (value) {
+                document.getElementById("OrderTableCount").innerText = value;
+            });
+
+            connection.start().then(function () {
+                updateConnStatus("Connected");
+                connection.invoke("SendStatistic");
+
+                setInterval(function () {
+                    connection.invoke("SendStatistic");
+                }, 1000);
+
+            }).catch(function (err) {
+                updateConnStatus("Hata: " + err.toString());
+                console.error(err);
+            });
+
+        })();
+    </script>
+}

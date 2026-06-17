@@ -1,0 +1,126 @@
+@{
+    ViewData["Title"] = "QR Kod Yönetimi";
+}
+
+<style>
+    .glass-panel { background: rgba(246, 240, 232, 0.7); backdrop-filter: blur(12px); border: 1px solid rgba(216, 208, 200, 0.6); }
+    .soft-shadow { box-shadow: 0 2px 16px rgba(58, 48, 42, 0.04); }
+</style>
+
+<div class="max-w-6xl mx-auto space-y-12 font-body">
+
+    <!-- Header -->
+    <header class="space-y-4 max-w-2xl">
+        <p class="text-xs font-bold tracking-widest uppercase text-primary">Sahara Admin</p>
+        <h1 class="text-4xl md:text-5xl font-headline font-bold text-on-surface tracking-tight">QR Kod Yönetimi</h1>
+        <p class="text-lg text-on-surface-variant leading-relaxed">
+            Masalarınız veya dijital menüleriniz için özelleştirilmiş QR kodları oluşturun.
+        </p>
+    </header>
+
+    <!-- Generator + Preview -->
+    <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
+
+        <!-- Left: Form -->
+        <div class="lg:col-span-6 glass-panel soft-shadow rounded-xl p-8 space-y-8">
+            <div class="space-y-2 border-b border-outline-variant/60 pb-4">
+                <h2 class="text-2xl font-headline font-semibold text-on-surface">Yeni QR Kod Oluştur</h2>
+                <p class="text-sm text-on-surface-variant">Bağlantı detaylarını ve boyutu belirleyin.</p>
+            </div>
+
+            <form method="post" asp-action="Index" asp-controller="QrCode" class="space-y-6">
+                @Html.AntiForgeryToken()
+
+                <!-- URL Input -->
+                <div class="space-y-2">
+                    <label class="block text-sm font-semibold text-on-surface" for="qr-url">Bağlantı URL / Masa No</label>
+                    <div class="relative">
+                        <span class="absolute inset-y-0 left-0 flex items-center pl-3 text-secondary">
+                            <span class="material-symbols-outlined text-lg">link</span>
+                        </span>
+                        <input class="w-full pl-10 pr-4 py-3 bg-surface-container-lowest border border-outline-variant rounded-lg text-on-surface focus:ring-2 focus:ring-primary focus:border-primary transition-all text-sm placeholder:text-on-surface-variant/50"
+                               id="qr-url" name="value" type="text" placeholder="Örn: https://menu.sahara.com/masa/4" />
+                    </div>
+                </div>
+
+                <!-- Size -->
+                <div class="space-y-2">
+                    <label class="block text-sm font-semibold text-on-surface" for="qr-size">QR Kod Boyutu</label>
+                    <select class="w-full px-4 py-3 bg-surface-container-lowest border border-outline-variant rounded-lg text-on-surface focus:ring-2 focus:ring-primary focus:border-primary transition-all text-sm appearance-none cursor-pointer"
+                            id="qr-size" name="size">
+                        <option value="small">Küçük (150×150 px) — Masa İçi Etiket</option>
+                        <option value="medium" selected>Orta (300×300 px) — Standart Menü</option>
+                        <option value="large">Büyük (600×600 px) — Giriş Panosu</option>
+                        <option value="xlarge">Ekstra Büyük (1000×1000 px) — Poster</option>
+                    </select>
+                </div>
+
+                <!-- Colors -->
+                <div class="space-y-2">
+                    <label class="block text-sm font-semibold text-on-surface">Renk Seçimi</label>
+                    <div class="grid grid-cols-2 gap-4">
+                        <div class="flex items-center gap-3 bg-surface-container-lowest border border-outline-variant rounded-lg px-4 py-3">
+                            <input type="color" name="darkColor" value="#000000"
+                                   class="w-8 h-8 rounded cursor-pointer border-0 bg-transparent p-0" />
+                            <span class="text-sm text-on-surface-variant">Ön Plan</span>
+                        </div>
+                        <div class="flex items-center gap-3 bg-surface-container-lowest border border-outline-variant rounded-lg px-4 py-3">
+                            <input type="color" name="lightColor" value="#ffffff"
+                                   class="w-8 h-8 rounded cursor-pointer border-0 bg-transparent p-0" />
+                            <span class="text-sm text-on-surface-variant">Arka Plan</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Submit -->
+                <div class="pt-4">
+                    <button type="submit"
+                            class="w-full bg-primary text-on-primary font-semibold py-4 px-6 rounded-lg shadow-sm hover:opacity-90 transition-opacity duration-200 flex items-center justify-center gap-2">
+                        <span class="material-symbols-outlined">qr_code_2</span>
+                        QR Kod Oluştur
+                    </button>
+                </div>
+            </form>
+        </div>
+
+        <!-- Right: Preview -->
+        <div class="lg:col-span-6 sticky top-8">
+            <div class="bg-surface-container-lowest soft-shadow rounded-xl p-8 border border-outline-variant/40 flex flex-col items-center text-center">
+                <h3 class="text-lg font-headline font-semibold text-on-surface mb-6 w-full text-left">Önizleme</h3>
+
+                <div class="bg-surface-bright border border-outline-variant/60 rounded-xl p-8 shadow-sm mb-8 w-full max-w-xs">
+                    <div class="aspect-square w-full bg-surface-container-low rounded-lg mb-6 flex items-center justify-center overflow-hidden">
+                        @if (ViewBag.QrCodeImage != null)
+                        {
+                            <img src="@ViewBag.QrCodeImage" alt="QR Kod" class="w-full h-full object-contain" />
+                        }
+                        else
+                        {
+                            <span class="material-symbols-outlined text-6xl text-outline-variant">qr_code_2</span>
+                        }
+                    </div>
+                    <div class="flex items-center justify-center gap-2">
+                        <span class="material-symbols-outlined text-primary text-2xl">restaurant</span>
+                        <span class="font-headline font-bold text-xl text-on-surface tracking-widest uppercase">Sahara</span>
+                    </div>
+                </div>
+
+                @if (ViewBag.QrCodeImage != null)
+                {
+                    <div class="flex flex-col sm:flex-row gap-4 w-full">
+                        <a href="@ViewBag.QrCodeImage" download="sahara-qr.png"
+                           class="flex-1 flex items-center justify-center gap-2 px-4 py-3 border border-outline text-on-surface-variant font-medium rounded-lg hover:bg-surface-container hover:text-on-surface transition-colors">
+                            <span class="material-symbols-outlined text-sm">download</span>
+                            İndir (PNG)
+                        </a>
+                        <button onclick="window.print()"
+                                class="flex-1 flex items-center justify-center gap-2 px-4 py-3 bg-surface-container text-on-surface font-medium rounded-lg hover:bg-surface-container-highest transition-colors">
+                            <span class="material-symbols-outlined text-sm">print</span>
+                            Yazdır
+                        </button>
+                    </div>
+                }
+            </div>
+        </div>
+    </div>
+</div>

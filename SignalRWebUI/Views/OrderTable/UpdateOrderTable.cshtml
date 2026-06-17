@@ -1,0 +1,89 @@
+@using SignalR.WebUI.Dtos.OrderTableDtos
+@model UpdateOrderTableDto
+@{
+    ViewData["Title"] = "Masa Güncelle";
+}
+
+<style>
+    .material-symbols-outlined { font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24; }
+    .sahara-input {
+        width: 100%;
+        background-color: #ffffff;
+        border: 1px solid #d8d0c8;
+        color: #3a302a;
+        font-size: 1rem;
+        padding: 0.75rem 1rem;
+        border-radius: 0.5rem;
+        transition: border-color 0.2s, box-shadow 0.2s;
+        outline: none;
+    }
+    .sahara-input:focus {
+        border-color: #c2652a;
+        box-shadow: 0 0 0 1px #c2652a;
+    }
+    .sahara-shadow { box-shadow: 0 2px 16px rgba(58, 48, 42, 0.04); }
+</style>
+
+<main class="w-full max-w-3xl mx-auto p-4 sm:p-8">
+
+    <header class="mb-10 text-center sm:text-left">
+        <a asp-controller="OrderTable" asp-action="OrderTableList"
+           class="inline-flex items-center text-secondary hover:text-primary transition-colors text-sm font-medium mb-4">
+            <span class="material-symbols-outlined mr-1" style="font-size: 18px;">arrow_back</span>
+            Masalara Dön
+        </a>
+        <h1 class="font-headline text-4xl sm:text-5xl font-semibold tracking-tight text-on-background mb-3">
+            Masa Güncelle
+        </h1>
+        <p class="font-body text-lg text-on-surface-variant">Mevcut masa bilgilerini düzenleyin.</p>
+    </header>
+
+    <div class="bg-surface-container-low rounded-xl sahara-shadow border border-outline-variant/60 p-6 sm:p-10">
+        <form asp-controller="OrderTable" asp-action="UpdateOrderTable" method="post" class="space-y-8">
+
+            <input type="hidden" asp-for="OrderTableId" />
+
+            <div class="space-y-6">
+                <h2 class="font-headline text-2xl font-medium text-primary border-b border-outline-variant/40 pb-2">
+                    Masa Bilgileri
+                </h2>
+                <div class="grid grid-cols-1 sm:grid-cols-2 gap-6">
+
+                    <!-- Masa Adı -->
+                    <div class="sm:col-span-2">
+                        <label asp-for="OrderTableName" class="block font-label text-sm font-semibold text-on-surface mb-2">
+                            Masa Adı
+                        </label>
+                        <input asp-for="OrderTableName" class="sahara-input" placeholder="Örn: Masa 1, Teras 2" />
+                        <span asp-validation-for="OrderTableName" class="text-error text-xs mt-1 block"></span>
+                    </div>
+
+                    <!-- Durum -->
+                    <div>
+                        <label asp-for="Status" class="block font-label text-sm font-semibold text-on-surface mb-2">
+                            Durum
+                        </label>
+                        <select asp-for="Status" class="sahara-input appearance-none">
+                            <option value="false" selected="@(Model != null && !Model.Status)">Boş</option>
+                            <option value="true" selected="@(Model != null && Model.Status)">Dolu</option>
+                        </select>
+                    </div>
+
+                </div>
+            </div>
+
+            <div class="pt-6 flex flex-col sm:flex-row items-center justify-end gap-4 border-t border-outline-variant/40">
+                <a asp-controller="OrderTable" asp-action="OrderTableList"
+                   class="w-full sm:w-auto px-8 py-3 rounded-lg border border-outline-variant text-on-surface font-label font-semibold hover:bg-surface-container-high transition-colors text-center">
+                    Vazgeç
+                </a>
+                <button type="submit"
+                        class="w-full sm:w-auto px-8 py-3 rounded-lg bg-primary text-on-primary font-label font-semibold hover:bg-on-primary-fixed-variant transition-colors shadow-sm">
+                    Güncelle
+                </button>
+            </div>
+
+        </form>
+    </div>
+
+</main>

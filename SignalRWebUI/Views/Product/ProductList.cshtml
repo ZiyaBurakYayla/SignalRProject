@@ -1,0 +1,158 @@
+@model List<SignalRWebUI.Dtos.ProductDtos.ResultProductByCategoryDto>
+@{
+    ViewData["Title"] = "Ürün Yönetimi";
+}
+
+<style>
+    .material-symbols-outlined {
+        font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+    }
+</style>
+
+<div class="admin-page">
+
+    <!-- Header -->
+    <header class="admin-header">
+        <div>
+            <p class="admin-badge">Sahara Admin</p>
+            <h1 class="admin-title">Ürün Yönetimi</h1>
+            <p class="admin-subtitle">Restoran menüünüzdeki ürünleri ekleyin, düzenleyin ve yönetin.</p>
+        </div>
+        <a asp-controller="Product" asp-action="CreateProduct" class="admin-btn-add">
+            <span class="material-symbols-outlined">add</span>
+            Yeni Ürün Ekle
+        </a>
+    </header>
+
+    <!-- Actions Row -->
+    <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-8 gap-4">
+        <div class="flex items-center gap-3 w-full sm:w-auto">
+            <div class="relative flex-1 sm:w-80 group">
+                <span class="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-secondary group-focus-within:text-primary transition-colors">search</span>
+                <input class="pl-10 pr-4 py-2.5 w-full bg-surface-container-lowest border border-outline-variant rounded-full text-sm font-label focus:outline-none focus:border-primary focus:ring-1 focus:ring-primary transition-all placeholder:text-secondary outline-none"
+                       placeholder="Ürün ara..." type="text" />
+            </div>
+            <button class="flex items-center gap-2 px-4 py-2.5 border border-outline-variant text-on-surface-variant hover:text-primary hover:border-primary rounded-lg font-label text-sm transition-colors whitespace-nowrap bg-surface-container-lowest">
+                <span class="material-symbols-outlined text-[1.2rem]">filter_list</span>
+                <span>Filtrele</span>
+            </button>
+        </div>
+        <a asp-controller="Product" asp-action="CreateProduct"
+           class="flex items-center justify-center gap-2 px-6 py-2.5 bg-primary text-on-primary rounded-lg font-label font-bold shadow-[0_2px_16px_rgba(58,48,42,0.08)] hover:bg-on-primary-fixed-variant active:scale-95 transition-all w-full sm:w-auto">
+            <span class="material-symbols-outlined text-[1.2rem]">add</span>
+            <span>Yeni Ürün Ekle</span>
+        </a>
+    </div>
+
+    <!-- Data Table Card -->
+    <div class="bg-surface-container-lowest rounded-xl border border-outline-variant/60 shadow-[0_2px_16px_rgba(58,48,42,0.04)] overflow-hidden">
+        <div class="overflow-x-auto">
+            <table class="w-full text-left border-collapse min-w-[700px]">
+                <thead>
+                    <tr class="border-b border-outline-variant/60 bg-surface-container-low/50">
+                        <th class="px-6 py-4 font-label text-xs font-bold text-secondary uppercase tracking-wider w-16">#ID</th>
+                        <th class="px-6 py-4 font-label text-xs font-bold text-secondary uppercase tracking-wider w-24">Görsel</th>
+                        <th class="px-6 py-4 font-label text-xs font-bold text-secondary uppercase tracking-wider">Ürün Adı</th>
+                        <th class="px-6 py-4 font-label text-xs font-bold text-secondary uppercase tracking-wider">Kategori</th>
+                        <th class="px-6 py-4 font-label text-xs font-bold text-secondary uppercase tracking-wider">Fiyat (TL)</th>
+                        <th class="px-6 py-4 font-label text-xs font-bold text-secondary uppercase tracking-wider">Durum</th>
+                        <th class="px-6 py-4 font-label text-xs font-bold text-secondary uppercase tracking-wider text-right">İşlemler</th>
+                    </tr>
+                </thead>
+                <tbody class="divide-y divide-outline-variant/40">
+                    @if (Model != null && Model.Any())
+                    {
+                        @foreach (var item in Model)
+                        {
+                            <tr class="hover:bg-surface-container-low/30 transition-colors group">
+                                <td class="px-6 py-4 font-label text-sm text-secondary">#@item.ProductId</td>
+                                <td class="px-6 py-4">
+                                    <div class="w-12 h-12 rounded-lg overflow-hidden border border-outline-variant/40 bg-surface-container shadow-sm">
+                                        @if (!string.IsNullOrEmpty(item.ProductImageUrl))
+                                        {
+                                            <img src="@item.ProductImageUrl" alt="@item.ProductName"
+                                                 class="w-full h-full object-cover" />
+                                        }
+                                        else
+                                        {
+                                            <div class="w-full h-full flex items-center justify-center text-secondary">
+                                                <span class="material-symbols-outlined text-[1.5rem]">image</span>
+                                            </div>
+                                        }
+                                    </div>
+                                </td>
+                                <td class="px-6 py-4">
+                                    <div class="font-headline text-lg font-bold text-on-surface group-hover:text-primary transition-colors">
+                                        @item.ProductName
+                                    </div>
+                                </td>
+                                <td class="px-6 py-4">
+                                    <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-surface-container-high text-on-surface-variant border border-outline-variant/30">
+                                        @item.CategoryName
+                                    </span>
+                                </td>
+                                <td class="px-6 py-4 font-label text-sm font-semibold text-on-surface">
+                                    @item.ProductPrice.ToString("N2") TL
+                                </td>
+                                <td class="px-6 py-4">
+                                    @if (item.ProductStatus)
+                                    {
+                                        <span class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-bold bg-primary-fixed text-on-primary-fixed-variant">
+                                            <span class="w-1.5 h-1.5 rounded-full bg-primary"></span>
+                                            Aktif
+                                        </span>
+                                    }
+                                    else
+                                    {
+                                        <span class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-bold bg-surface-container-high text-secondary border border-outline-variant/40">
+                                            <span class="w-1.5 h-1.5 rounded-full bg-secondary"></span>
+                                            Pasif
+                                        </span>
+                                    }
+                                </td>
+                                <td class="px-6 py-4 text-right">
+                                    <div class="flex items-center justify-end gap-2">
+                                        <a asp-controller="Product" asp-action="UpdateProduct" asp-route-id="@item.ProductId"
+                                           class="p-1.5 text-secondary hover:text-primary hover:bg-primary-container/20 rounded-md transition-colors" title="Düzenle">
+                                            <span class="material-symbols-outlined text-[1.2rem]">edit</span>
+                                        </a>
+                                        <a asp-controller="Product" asp-action="DeleteProduct" asp-route-id="@item.ProductId"
+                                           class="p-1.5 text-secondary hover:text-error hover:bg-error-container/20 rounded-md transition-colors" title="Sil">
+                                            <span class="material-symbols-outlined text-[1.2rem]">delete</span>
+                                        </a>
+                                    </div>
+                                </td>
+                            </tr>
+                        }
+                    }
+                    else
+                    {
+                        <tr>
+                            <td colspan="7" class="px-6 py-16 text-center">
+                                <div class="flex flex-col items-center justify-center text-secondary">
+                                    <span class="material-symbols-outlined text-[3rem] mb-3 opacity-50">inventory_2</span>
+                                    <p class="font-label text-sm">Henüz ürün bulunmuyor.</p>
+                                </div>
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+
+        <!-- Pagination Footer -->
+        <div class="px-6 py-4 border-t border-outline-variant/60 bg-surface-container-low/30 flex items-center justify-between">
+            <span class="font-label text-xs text-secondary">Toplam: @(Model?.Count ?? 0) ürün</span>
+            <div class="flex gap-1">
+                <button class="p-1 rounded text-secondary hover:bg-surface-container hover:text-on-surface disabled:opacity-50 transition-colors" disabled>
+                    <span class="material-symbols-outlined text-sm">chevron_left</span>
+                </button>
+                <button class="px-2.5 py-1 rounded bg-primary text-on-primary font-label text-xs font-bold shadow-sm">1</button>
+                <button class="p-1 rounded text-secondary hover:bg-surface-container hover:text-on-surface disabled:opacity-50 transition-colors" disabled>
+                    <span class="material-symbols-outlined text-sm">chevron_right</span>
+                </button>
+            </div>
+        </div>
+    </div>
+
+</div>

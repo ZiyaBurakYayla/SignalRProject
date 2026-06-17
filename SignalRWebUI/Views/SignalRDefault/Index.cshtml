@@ -1,0 +1,42 @@
+@{
+    ViewData["Title"] = "Bağlantı Durumu";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<div class="row">
+    <div class="col-md-8 offset-2">
+        <div class="alert alert-success">
+            Bağlantının durumu: <strong id="connstatus">Bekleniyor...</strong>
+        </div>
+        <div class="alert alert-success">
+            Kategori sayısı: <strong id="categoryCount"></strong>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script src="~/lib/microsoft/signalr/dist/browser/signalr.min.js"></script>
+    <script type="text/javascript">
+        (function () {
+            var connection = new signalR.HubConnectionBuilder()
+                .withUrl("https://localhost:7196/signalrhub")
+                .build();
+
+            document.getElementById("connstatus").innerText = connection.state;
+
+            // ✅ connection.on() start()'tan ÖNCE tanımlanmalı
+            connection.on("ReceiveCategoryCount", function (value) {
+                document.getElementById("categoryCount").innerText = value;
+            });
+
+            connection.start().then(function () {
+                document.getElementById("connstatus").innerText = connection.state;
+                connection.invoke("CategoryCount");
+            }).catch(function (err) {
+                document.getElementById("connstatus").innerText = "Hata: " + err.toString();
+                console.error(err);
+            });
+
+        })();
+    </script>
+}

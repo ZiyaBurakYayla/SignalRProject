@@ -1,0 +1,121 @@
+@model CreateSliderDto
+@{
+    ViewData["Title"] = "Yeni Slider Ekle";
+}
+
+<style>
+    .material-symbols-outlined { font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24; }
+    .sahara-input {
+        width: 100%;
+        background-color: #ffffff;
+        border: 1px solid rgba(216,208,200,0.6);
+        border-radius: 0.5rem;
+        padding: 0.75rem 1rem;
+        color: #3a302a;
+        font-family: 'Manrope', sans-serif;
+        outline: none;
+        transition: border-color 0.2s, box-shadow 0.2s;
+    }
+    .sahara-input:focus {
+        border-color: #c2652a;
+        box-shadow: 0 0 0 1px #c2652a;
+    }
+</style>
+
+<main class="w-full max-w-5xl mx-auto pt-8 pb-12 px-4 sm:px-6 lg:px-8">
+
+    <!-- Header -->
+    <header class="mb-10 text-center md:text-left">
+        <div class="flex items-center gap-3 mb-2 justify-center md:justify-start">
+            <a asp-controller="Slider" asp-action="SliderList"
+               class="text-on-surface-variant hover:text-primary transition-colors flex items-center justify-center p-2 rounded-full hover:bg-primary-fixed/20">
+                <span class="material-symbols-outlined">arrow_back</span>
+            </a>
+            <h1 class="text-4xl font-headline font-bold text-on-surface tracking-tight">Yeni Slider Ekle</h1>
+        </div>
+        <p class="text-on-surface-variant text-lg max-w-2xl ml-0 md:ml-12">
+            Ana sayfada görünecek üçlü slider içeriğini girin.
+        </p>
+    </header>
+
+    <!-- Form -->
+    <form asp-controller="Slider" asp-action="CreateSlider" method="post"
+          class="bg-surface-container-low shadow-[0_2px_16px_rgba(58,48,42,0.04)] rounded-xl p-8 border border-outline-variant/30">
+
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+
+            <!-- Slider 1 -->
+            <div class="flex flex-col gap-6 p-6 bg-surface-container-lowest rounded-lg border border-outline-variant/40 shadow-sm relative overflow-hidden group">
+                <div class="absolute top-0 left-0 w-full h-1 bg-surface-variant group-focus-within:bg-primary transition-colors duration-300"></div>
+                <h3 class="text-xl font-headline font-semibold text-on-surface flex items-center gap-2">
+                    <span class="material-symbols-outlined text-primary">looks_one</span>
+                    Birinci İçerik
+                </h3>
+                <div>
+                    <label asp-for="Title1" class="block text-sm font-semibold text-on-surface-variant mb-2">Başlık 1</label>
+                    <input asp-for="Title1" class="sahara-input" placeholder="Örn: Taze Malzemeler" />
+                    <span asp-validation-for="Title1" class="text-error text-xs mt-1 block"></span>
+                </div>
+                <div>
+                    <label asp-for="Description1" class="block text-sm font-semibold text-on-surface-variant mb-2">Açıklama 1</label>
+                    <textarea asp-for="Description1" class="sahara-input resize-none" rows="4"
+                              placeholder="Açıklama giriniz..."></textarea>
+                </div>
+            </div>
+
+            <!-- Slider 2 -->
+            <div class="flex flex-col gap-6 p-6 bg-surface-container-lowest rounded-lg border border-outline-variant/40 shadow-sm relative overflow-hidden group">
+                <div class="absolute top-0 left-0 w-full h-1 bg-surface-variant group-focus-within:bg-primary transition-colors duration-300"></div>
+                <h3 class="text-xl font-headline font-semibold text-on-surface flex items-center gap-2">
+                    <span class="material-symbols-outlined text-primary">looks_two</span>
+                    İkinci İçerik
+                </h3>
+                <div>
+                    <label asp-for="Title2" class="block text-sm font-semibold text-on-surface-variant mb-2">Başlık 2</label>
+                    <input asp-for="Title2" class="sahara-input" placeholder="Örn: Usta Şefler" />
+                    <span asp-validation-for="Title2" class="text-error text-xs mt-1 block"></span>
+                </div>
+                <div>
+                    <label asp-for="Description2" class="block text-sm font-semibold text-on-surface-variant mb-2">Açıklama 2</label>
+                    <textarea asp-for="Description2" class="sahara-input resize-none" rows="4"
+                              placeholder="Açıklama giriniz..."></textarea>
+                </div>
+            </div>
+
+            <!-- Slider 3 -->
+            <div class="flex flex-col gap-6 p-6 bg-surface-container-lowest rounded-lg border border-outline-variant/40 shadow-sm relative overflow-hidden group">
+                <div class="absolute top-0 left-0 w-full h-1 bg-surface-variant group-focus-within:bg-primary transition-colors duration-300"></div>
+                <h3 class="text-xl font-headline font-semibold text-on-surface flex items-center gap-2">
+                    <span class="material-symbols-outlined text-primary">looks_3</span>
+                    Üçüncü İçerik
+                </h3>
+                <div>
+                    <label asp-for="Title3" class="block text-sm font-semibold text-on-surface-variant mb-2">Başlık 3</label>
+                    <input asp-for="Title3" class="sahara-input" placeholder="Örn: Hızlı Teslimat" />
+                    <span asp-validation-for="Title3" class="text-error text-xs mt-1 block"></span>
+                </div>
+                <div>
+                    <label asp-for="Description3" class="block text-sm font-semibold text-on-surface-variant mb-2">Açıklama 3</label>
+                    <textarea asp-for="Description3" class="sahara-input resize-none" rows="4"
+                              placeholder="Açıklama giriniz..."></textarea>
+                </div>
+            </div>
+
+        </div>
+
+        <!-- Actions -->
+        <div class="mt-10 flex flex-col-reverse sm:flex-row justify-end gap-4 pt-6 border-t border-outline-variant/40">
+            <a asp-controller="Slider" asp-action="SliderList"
+               class="px-6 py-3 rounded-lg font-semibold text-on-surface-variant border border-outline-variant hover:bg-surface-variant/50 transition-colors duration-200 text-center">
+                Vazgeç
+            </a>
+            <button type="submit"
+                    class="px-8 py-3 rounded-lg font-semibold bg-primary text-on-primary shadow-sm hover:bg-on-primary-fixed-variant transition-all duration-200 flex items-center justify-center gap-2">
+                <span class="material-symbols-outlined text-[20px]">save</span>
+                Kaydet
+            </button>
+        </div>
+
+    </form>
+
+</main>

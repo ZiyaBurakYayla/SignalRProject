@@ -1,0 +1,158 @@
+@using SignalRWebUI.Dtos.IdentityDtos
+@model RegisterDto
+@{
+    Layout = null;
+}
+
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Kayıt Ol — Sahara Yönetim Paneli</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=EB+Garamond:wght@400;500;600;700&family=Manrope:wght@400;500;600;700&display=swap" rel="stylesheet" />
+    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet" />
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        primary: '#c2652a',
+                        background: '#faf9f6',
+                        surface: '#ffffff',
+                        'surface-alt': '#f3f0ea',
+                        border: '#e5e2db',
+                        text: '#2c2825',
+                        'text-muted': '#7a7369'
+                    },
+                    fontFamily: {
+                        sans: ['Manrope', 'sans-serif'],
+                        headline: ['"EB Garamond"', 'serif'],
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        .material-symbols-outlined { font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24; }
+        .sahara-input {
+            width: 100%;
+            background-color: #f3f0ea;
+            border: 1px solid #e5e2db;
+            border-radius: 0.5rem;
+            padding: 0.75rem 1rem 0.75rem 2.75rem;
+            color: #2c2825;
+            font-family: 'Manrope', sans-serif;
+            font-size: 0.875rem;
+            outline: none;
+            transition: border-color 0.2s, box-shadow 0.2s, background-color 0.2s;
+        }
+        .sahara-input:focus {
+            background-color: #ffffff;
+            border-color: #c2652a;
+            box-shadow: 0 0 0 3px rgba(194,101,42,0.12);
+        }
+        .sahara-input::placeholder { color: #7a7369; }
+    </style>
+</head>
+<body class="min-h-screen bg-background flex items-center justify-center p-4 font-sans">
+
+    <div class="w-full max-w-md">
+
+        <!-- Logo -->
+        <div class="text-center mb-8">
+            <div class="inline-flex items-center justify-center w-14 h-14 rounded-full bg-primary/10 text-primary mb-4">
+                <span class="material-symbols-outlined text-3xl">restaurant</span>
+            </div>
+            <h1 class="font-headline text-3xl font-semibold text-text tracking-tight">Sahara Restoran</h1>
+            <p class="text-text-muted text-sm mt-1">Yönetim paneline yeni hesap oluşturun</p>
+        </div>
+
+        <!-- Card -->
+        <div class="bg-surface rounded-2xl border border-border p-8" style="box-shadow: 0 4px 32px rgba(44,40,37,0.08);">
+
+            <h2 class="font-headline text-2xl font-medium text-text mb-6">Kayıt Ol</h2>
+
+            <form method="post" class="space-y-4">
+
+                @if (!ViewData.ModelState.IsValid)
+                {
+                    <div class="flex items-start gap-2 p-3 bg-red-50 border border-red-200 rounded-lg text-red-700 text-sm">
+                        <span class="material-symbols-outlined text-[18px] mt-0.5 flex-shrink-0">error</span>
+                        <div>
+                            @foreach (var error in ViewData.ModelState.Values.SelectMany(v => v.Errors))
+                            {
+                                <p>@error.ErrorMessage</p>
+                            }
+                        </div>
+                    </div>
+                }
+
+                <!-- Ad / Soyad -->
+                <div class="grid grid-cols-2 gap-3">
+                    <div>
+                        <label asp-for="Name" class="block text-xs font-semibold text-text-muted mb-1.5 uppercase tracking-wide">Ad</label>
+                        <div class="relative">
+                            <span class="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-text-muted" style="font-size:18px">badge</span>
+                            <input asp-for="Name" class="sahara-input" placeholder="Adınız" />
+                        </div>
+                    </div>
+                    <div>
+                        <label asp-for="Surname" class="block text-xs font-semibold text-text-muted mb-1.5 uppercase tracking-wide">Soyad</label>
+                        <div class="relative">
+                            <span class="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-text-muted" style="font-size:18px">badge</span>
+                            <input asp-for="Surname" class="sahara-input" placeholder="Soyadınız" />
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Kullanıcı Adı -->
+                <div>
+                    <label asp-for="Username" class="block text-xs font-semibold text-text-muted mb-1.5 uppercase tracking-wide">Kullanıcı Adı</label>
+                    <div class="relative">
+                        <span class="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-text-muted" style="font-size:18px">person</span>
+                        <input asp-for="Username" class="sahara-input" placeholder="kullanici_adi" />
+                    </div>
+                </div>
+
+                <!-- E-posta -->
+                <div>
+                    <label asp-for="Mail" class="block text-xs font-semibold text-text-muted mb-1.5 uppercase tracking-wide">E-posta</label>
+                    <div class="relative">
+                        <span class="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-text-muted" style="font-size:18px">mail</span>
+                        <input asp-for="Mail" type="email" class="sahara-input" placeholder="ornek@mail.com" />
+                    </div>
+                </div>
+
+                <!-- Şifre -->
+                <div>
+                    <label asp-for="Password" class="block text-xs font-semibold text-text-muted mb-1.5 uppercase tracking-wide">Şifre</label>
+                    <div class="relative">
+                        <span class="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-text-muted" style="font-size:18px">lock</span>
+                        <input asp-for="Password" type="password" class="sahara-input" placeholder="••••••••" />
+                    </div>
+                </div>
+
+                <!-- Submit -->
+                <button type="submit"
+                        class="w-full mt-2 py-3 px-6 bg-primary hover:bg-[#a65421] text-white font-semibold rounded-lg transition-colors duration-200 flex items-center justify-center gap-2"
+                        style="box-shadow: 0 2px 8px rgba(194,101,42,0.25);">
+                    <span class="material-symbols-outlined" style="font-size:18px;font-variation-settings:'FILL' 1,'wght' 400,'GRAD' 0,'opsz' 24">how_to_reg</span>
+                    Kayıt Ol
+                </button>
+
+            </form>
+
+            <p class="text-center text-sm text-text-muted mt-6">
+                Zaten hesabınız var mı?
+                <a asp-controller="Login" asp-action="Index" class="text-primary hover:underline font-medium">Giriş Yapın</a>
+            </p>
+
+        </div>
+
+        <p class="text-center text-xs text-text-muted mt-6">© 2026 Sahara Restoran Yönetim Sistemi</p>
+    </div>
+
+</body>
+</html>

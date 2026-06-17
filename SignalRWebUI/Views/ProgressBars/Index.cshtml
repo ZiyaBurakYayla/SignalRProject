@@ -1,0 +1,380 @@
+@{
+    ViewData["Title"] = "Performans Özeti";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<style>
+    .material-symbols-outlined {
+        font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+    }
+</style>
+
+<main class="admin-page">
+
+    <!-- Header Section -->
+    <header class="admin-header">
+        <div>
+            <p class="admin-badge">Sahara Admin</p>
+            <h1 class="admin-title">Performans Özeti</h1>
+            <p class="admin-subtitle">İşletmenizin temel finansal ve operasyonel metriklerini inceleyin.</p>
+        </div>
+        <!-- Bağlantı durumu -->
+        <div class="flex items-center gap-2">
+            <span id="connDot" class="inline-block w-2.5 h-2.5 rounded-full bg-gray-400 transition-colors duration-500"></span>
+            <span id="connstatus" class="text-sm text-text-muted font-sans">Bağlanıyor...</span>
+        </div>
+    </header>
+
+    <!-- Bento Dashboard Panel -->
+    <div class="bg-white rounded-xl border border-border shadow-sm overflow-hidden flex flex-col lg:flex-row">
+
+        <!-- Sol Kolon: Bakiye -->
+        <div class="p-8 lg:w-1/4 border-b lg:border-b-0 lg:border-r border-border flex flex-col justify-between">
+            <div>
+                <h3 class="text-sm font-semibold text-text-muted font-sans uppercase tracking-wider mb-4">Kasa Toplamı</h3>
+                <div class="font-['EB_Garamond'] text-4xl font-semibold text-text mb-6" id="TotalMoneyCaseAmount">—</div>
+                <button class="w-full bg-primary text-white font-sans text-sm font-semibold px-4 py-3 rounded-lg hover:bg-primary-hover transition-colors duration-200 flex items-center justify-center gap-2 mb-8 shadow-sm">
+                    <span class="material-symbols-outlined text-[18px]">add</span>
+                    Sipariş Ekle
+                </button>
+            </div>
+            <div class="flex items-center justify-between text-text-muted border-t border-border pt-6">
+                <button class="flex items-center gap-2 text-sm hover:text-primary transition-colors font-medium font-sans">
+                    <span class="material-symbols-outlined text-base">history</span>
+                    Geçmiş
+                </button>
+                <button class="flex items-center gap-2 text-sm hover:text-primary transition-colors font-medium font-sans">
+                    <span class="material-symbols-outlined text-base">refresh</span>
+                    Yenile
+                </button>
+            </div>
+        </div>
+
+        <!-- Orta Kolon: Progress Bars -->
+        <div class="p-8 lg:w-2/4 border-b lg:border-b-0 lg:border-r border-border flex flex-col gap-6 justify-center">
+
+            <!-- Progress 1: Toplam Sipariş Tutarı -->
+            <div class="flex flex-col gap-2">
+                <div class="flex justify-between items-end">
+                    <span class="text-sm font-medium text-text-muted font-sans">Kasa Toplamı</span>
+                    <span class="font-['EB_Garamond'] font-semibold text-text" id="progressBarCaseAmount">—</span>
+                </div>
+                <div class="w-full h-2 bg-surface-alt rounded-full overflow-hidden">
+                    <div id="progressBarCaseBar" class="h-full bg-primary rounded-full transition-all duration-700" style="width: 0%"></div>
+                </div>
+            </div>
+
+            <!-- Progress 2: Aktif Sipariş -->
+            <div class="flex flex-col gap-2">
+                <div class="flex justify-between items-end">
+                    <span class="text-sm font-medium text-text-muted font-sans">Aktif Sipariş</span>
+                    <span class="font-['EB_Garamond'] font-semibold text-text" id="progressActiveOrder">—</span>
+                </div>
+                <div class="w-full h-2 bg-surface-alt rounded-full overflow-hidden">
+                    <div id="progressActiveBar" class="h-full rounded-full transition-all duration-700" style="width: 0%; background-color: #8c3c3c;"></div>
+                </div>
+            </div>
+
+            <!-- Progress 3: Toplam Sipariş -->
+            <div class="flex flex-col gap-2">
+                <div class="flex justify-between items-end">
+                    <span class="text-sm font-medium text-text-muted font-sans">Toplam Sipariş</span>
+                    <span class="font-['EB_Garamond'] font-semibold text-text" id="progressTotalOrder">—</span>
+                </div>
+                <div class="w-full h-2 bg-surface-alt rounded-full overflow-hidden">
+                    <div id="progressTotalBar" class="h-full bg-text-muted rounded-full transition-all duration-700" style="width: 0%"></div>
+                </div>
+            </div>
+
+            <!-- Progress 4: Bugünkü Toplam -->
+            <div class="flex flex-col gap-2">
+                <div class="flex justify-between items-end">
+                    <span class="text-sm font-medium text-text-muted font-sans">Bugünkü Toplam</span>
+                    <span class="font-['EB_Garamond'] font-semibold text-text" id="progressTodayTotal">—</span>
+                </div>
+                <div class="w-full h-2 bg-surface-alt rounded-full overflow-hidden">
+                    <div id="progressTodayBar" class="h-full rounded-full transition-all duration-700" style="width: 0%; background-color: #c2652a; opacity: 0.6;"></div>
+                </div>
+            </div>
+
+        </div>
+
+        <!-- Sağ Kolon: İstatistik -->
+        <div class="p-8 lg:w-1/4 flex flex-col justify-center gap-8">
+            <h3 class="text-sm font-semibold text-text font-sans uppercase tracking-wider">İstatistik</h3>
+
+            <div class="flex items-center gap-5">
+                <div class="w-12 h-12 rounded-full border-2 border-primary/20 flex items-center justify-center bg-surface-alt flex-shrink-0">
+                    <span class="material-symbols-outlined text-primary text-2xl" style="font-variation-settings: 'FILL' 1;">point_of_sale</span>
+                </div>
+                <div>
+                    <p class="text-xs text-text-muted font-sans mb-1">Kasa</p>
+                    <p class="font-['EB_Garamond'] text-2xl text-text font-semibold leading-none" id="statMoneyCaseAmount">—</p>
+                </div>
+            </div>
+
+            <div class="w-full h-px bg-border"></div>
+
+            <div class="flex items-center gap-5">
+                <div class="w-12 h-12 rounded-full border-2 flex items-center justify-center bg-surface-alt flex-shrink-0" style="border-color: rgba(140,60,60,0.2)">
+                    <span class="material-symbols-outlined text-2xl" style="color:#8c3c3c; font-variation-settings: 'FILL' 1;">shopping_bag</span>
+                </div>
+                <div>
+                    <p class="text-xs text-text-muted font-sans mb-1">Aktif Sipariş</p>
+                    <p class="font-['EB_Garamond'] text-2xl text-text font-semibold leading-none" id="statActiveOrder">—</p>
+                </div>
+            </div>
+
+            <div class="w-full h-px bg-border"></div>
+
+            <div class="flex items-center gap-5">
+                <div class="w-12 h-12 rounded-full border-2 border-text-muted/20 flex items-center justify-center bg-surface-alt flex-shrink-0">
+                    <span class="material-symbols-outlined text-text-muted text-2xl" style="font-variation-settings: 'FILL' 1;">today</span>
+                </div>
+                <div>
+                    <p class="text-xs text-text-muted font-sans mb-1">Bugünkü Toplam</p>
+                    <p class="font-['EB_Garamond'] text-2xl text-text font-semibold leading-none" id="statTodayTotal">—</p>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+    <!-- Ek Metrikler -->
+    <div class="mt-6 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+
+        <!-- Kategori Sayısı -->
+        <div class="bg-white rounded-xl border border-border shadow-sm p-6 flex flex-col gap-3">
+            <div class="flex items-center justify-between">
+                <div class="flex items-center gap-3">
+                    <div class="w-9 h-9 rounded-full bg-surface-alt border border-border flex items-center justify-center">
+                        <span class="material-symbols-outlined text-primary text-lg" style="font-variation-settings:'FILL' 1">category</span>
+                    </div>
+                    <span class="text-sm font-medium text-text-muted font-sans">Kategori Sayısı</span>
+                </div>
+                <span class="font-['EB_Garamond'] text-xl font-semibold text-text" id="statCategoryCount">—</span>
+            </div>
+            <div class="w-full h-1.5 bg-surface-alt rounded-full overflow-hidden">
+                <div id="barCategoryCount" class="h-full bg-primary rounded-full transition-all duration-700" style="width:0%"></div>
+            </div>
+        </div>
+
+        <!-- Ürün Sayısı -->
+        <div class="bg-white rounded-xl border border-border shadow-sm p-6 flex flex-col gap-3">
+            <div class="flex items-center justify-between">
+                <div class="flex items-center gap-3">
+                    <div class="w-9 h-9 rounded-full bg-surface-alt border border-border flex items-center justify-center">
+                        <span class="material-symbols-outlined text-lg" style="color:#78706a; font-variation-settings:'FILL' 1">restaurant_menu</span>
+                    </div>
+                    <span class="text-sm font-medium text-text-muted font-sans">Ürün Sayısı</span>
+                </div>
+                <span class="font-['EB_Garamond'] text-xl font-semibold text-text" id="statProductCount">—</span>
+            </div>
+            <div class="w-full h-1.5 bg-surface-alt rounded-full overflow-hidden">
+                <div id="barProductCount" class="h-full rounded-full transition-all duration-700" style="width:0%; background-color:#78706a"></div>
+            </div>
+        </div>
+
+        <!-- Aktif Kategori -->
+        <div class="bg-white rounded-xl border border-border shadow-sm p-6 flex flex-col gap-3">
+            <div class="flex items-center justify-between">
+                <div class="flex items-center gap-3">
+                    <div class="w-9 h-9 rounded-full bg-surface-alt border border-border flex items-center justify-center">
+                        <span class="material-symbols-outlined text-lg" style="color:#8c3c3c; font-variation-settings:'FILL' 1">check_circle</span>
+                    </div>
+                    <span class="text-sm font-medium text-text-muted font-sans">Aktif Kategori</span>
+                </div>
+                <span class="font-['EB_Garamond'] text-xl font-semibold text-text" id="statActiveCategoryCount">—</span>
+            </div>
+            <div class="w-full h-1.5 bg-surface-alt rounded-full overflow-hidden">
+                <div id="barActiveCategoryCount" class="h-full rounded-full transition-all duration-700" style="width:0%; background-color:#8c3c3c"></div>
+            </div>
+        </div>
+
+        <!-- Son Sipariş -->
+        <div class="bg-white rounded-xl border border-border shadow-sm p-6 flex flex-col gap-3">
+            <div class="flex items-center justify-between">
+                <div class="flex items-center gap-3">
+                    <div class="w-9 h-9 rounded-full bg-surface-alt border border-border flex items-center justify-center">
+                        <span class="material-symbols-outlined text-primary text-lg" style="font-variation-settings:'FILL' 1">receipt</span>
+                    </div>
+                    <span class="text-sm font-medium text-text-muted font-sans">Son Sipariş</span>
+                </div>
+                <span class="font-['EB_Garamond'] text-xl font-semibold text-text" id="statLastOrderPrice">—</span>
+            </div>
+            <div class="w-full h-1.5 bg-surface-alt rounded-full overflow-hidden">
+                <div id="barLastOrderPrice" class="h-full bg-primary rounded-full transition-all duration-700" style="width:0%; opacity:0.7"></div>
+            </div>
+        </div>
+
+        <!-- Ort. Ürün Fiyatı -->
+        <div class="bg-white rounded-xl border border-border shadow-sm p-6 flex flex-col gap-3">
+            <div class="flex items-center justify-between">
+                <div class="flex items-center gap-3">
+                    <div class="w-9 h-9 rounded-full bg-surface-alt border border-border flex items-center justify-center">
+                        <span class="material-symbols-outlined text-lg" style="color:#78706a; font-variation-settings:'FILL' 1">price_change</span>
+                    </div>
+                    <span class="text-sm font-medium text-text-muted font-sans">Ort. Ürün Fiyatı</span>
+                </div>
+                <span class="font-['EB_Garamond'] text-xl font-semibold text-text" id="statAvgPrice">—</span>
+            </div>
+            <div class="w-full h-1.5 bg-surface-alt rounded-full overflow-hidden">
+                <div id="barAvgPrice" class="h-full rounded-full transition-all duration-700" style="width:0%; background-color:#78706a"></div>
+            </div>
+        </div>
+
+        <!-- Masa Sayısı -->
+        <div class="bg-white rounded-xl border border-border shadow-sm p-6 flex flex-col gap-3">
+            <div class="flex items-center justify-between">
+                <div class="flex items-center gap-3">
+                    <div class="w-9 h-9 rounded-full bg-surface-alt border border-border flex items-center justify-center">
+                        <span class="material-symbols-outlined text-lg" style="color:#8c3c3c; font-variation-settings:'FILL' 1">chair</span>
+                    </div>
+                    <span class="text-sm font-medium text-text-muted font-sans">Masa Sayısı</span>
+                </div>
+                <span class="font-['EB_Garamond'] text-xl font-semibold text-text" id="statTableCount">—</span>
+            </div>
+            <div class="w-full h-1.5 bg-surface-alt rounded-full overflow-hidden">
+                <div id="barTableCount" class="h-full rounded-full transition-all duration-700" style="width:0%; background-color:#8c3c3c"></div>
+            </div>
+        </div>
+
+    </div>
+
+</main>
+
+@section Scripts {
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/microsoft-signalr/7.0.5/signalr.min.js"></script>
+    <script type="text/javascript">
+        (function () {
+            var connection = new signalR.HubConnectionBuilder()
+                .withUrl("https://localhost:7196/signalrhub")
+                .build();
+
+            function updateConnStatus(state) {
+                var dot = document.getElementById("connDot");
+                var label = document.getElementById("connstatus");
+                if (!dot || !label) return;
+                label.innerText = state;
+                if (state === "Connected") {
+                    dot.style.background = "#22c55e";
+                } else if (state.startsWith("Hata")) {
+                    dot.style.background = "#c0392b";
+                } else {
+                    dot.style.background = "#9a9088";
+                }
+            }
+
+            updateConnStatus(connection.state);
+
+            connection.on("ReceiveTotalMoneyCaseAmount", function (value) {
+                var elMain = document.getElementById("TotalMoneyCaseAmount");
+                var elBar  = document.getElementById("progressBarCaseAmount");
+                var elStat = document.getElementById("statMoneyCaseAmount");
+                if (elMain) elMain.innerText = value;
+                if (elBar)  elBar.innerText  = value;
+                if (elStat) elStat.innerText  = value;
+
+                var raw = parseFloat(value.replace(/[^\d.,]/g, "").replace(",", ".")) || 0;
+                var pct = Math.min((raw / 10000) * 100, 100);
+                var bar = document.getElementById("progressBarCaseBar");
+                if (bar) bar.style.width = pct.toFixed(1) + "%";
+            });
+
+            connection.on("ReceiveActiveOrderCount", function (value) {
+                var el = document.getElementById("progressActiveOrder");
+                var st = document.getElementById("statActiveOrder");
+                if (el) el.innerText = value;
+                if (st) st.innerText = value;
+                var pct = Math.min((parseInt(value) / 50) * 100, 100);
+                var bar = document.getElementById("progressActiveBar");
+                if (bar) bar.style.width = pct.toFixed(1) + "%";
+            });
+
+            connection.on("ReceiveTotalOrderCount", function (value) {
+                var el = document.getElementById("progressTotalOrder");
+                if (el) el.innerText = value;
+                var pct = Math.min((parseInt(value) / 200) * 100, 100);
+                var bar = document.getElementById("progressTotalBar");
+                if (bar) bar.style.width = pct.toFixed(1) + "%";
+            });
+
+            connection.on("ReceiveCategoryCount", function (value) {
+                var el = document.getElementById("statCategoryCount");
+                if (el) el.innerText = value;
+                var pct = Math.min((parseInt(value) / 20) * 100, 100);
+                var bar = document.getElementById("barCategoryCount");
+                if (bar) bar.style.width = pct.toFixed(1) + "%";
+            });
+
+            connection.on("ReceiveProductCount", function (value) {
+                var el = document.getElementById("statProductCount");
+                if (el) el.innerText = value;
+                var pct = Math.min((parseInt(value) / 100) * 100, 100);
+                var bar = document.getElementById("barProductCount");
+                if (bar) bar.style.width = pct.toFixed(1) + "%";
+            });
+
+            connection.on("ReceiveActiveCategoryCount", function (value) {
+                var el = document.getElementById("statActiveCategoryCount");
+                if (el) el.innerText = value;
+                var pct = Math.min((parseInt(value) / 20) * 100, 100);
+                var bar = document.getElementById("barActiveCategoryCount");
+                if (bar) bar.style.width = pct.toFixed(1) + "%";
+            });
+
+            connection.on("ReceiveLastOrderPrice", function (value) {
+                var el = document.getElementById("statLastOrderPrice");
+                if (el) el.innerText = value;
+                var raw = parseFloat(value.replace(/[^\d.,]/g, "").replace(",", ".")) || 0;
+                var pct = Math.min((raw / 500) * 100, 100);
+                var bar = document.getElementById("barLastOrderPrice");
+                if (bar) bar.style.width = pct.toFixed(1) + "%";
+            });
+
+            connection.on("ReceiveAverageProductPrice", function (value) {
+                var el = document.getElementById("statAvgPrice");
+                if (el) el.innerText = value;
+                var raw = parseFloat(value.replace(/[^\d.,]/g, "").replace(",", ".")) || 0;
+                var pct = Math.min((raw / 200) * 100, 100);
+                var bar = document.getElementById("barAvgPrice");
+                if (bar) bar.style.width = pct.toFixed(1) + "%";
+            });
+
+            connection.on("ReceiveOrderTableCount", function (value) {
+                var el = document.getElementById("statTableCount");
+                if (el) el.innerText = value;
+                var pct = Math.min((parseInt(value) / 30) * 100, 100);
+                var bar = document.getElementById("barTableCount");
+                if (bar) bar.style.width = pct.toFixed(1) + "%";
+            });
+
+            connection.on("ReceiveTodayTotalPrice", function (value) {
+                var el = document.getElementById("progressTodayTotal");
+                var st = document.getElementById("statTodayTotal");
+                if (el) el.innerText = value;
+                if (st) st.innerText = value;
+                var raw = parseFloat(value.replace(/[^\d.,]/g, "").replace(",", ".")) || 0;
+                var pct = Math.min((raw / 5000) * 100, 100);
+                var bar = document.getElementById("progressTodayBar");
+                if (bar) bar.style.width = pct.toFixed(1) + "%";
+            });
+
+            connection.start().then(function () {
+                updateConnStatus("Connected");
+                connection.invoke("SendProgress");
+                connection.invoke("SendStatistic");
+
+                setInterval(function () {
+                    connection.invoke("SendProgress");
+                    connection.invoke("SendStatistic");
+                }, 2000);
+
+            }).catch(function (err) {
+                updateConnStatus("Hata: " + err.toString());
+                console.error(err);
+            });
+
+        })();
+    </script>
+}

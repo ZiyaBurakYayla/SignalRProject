@@ -1,0 +1,133 @@
+@model List<ResultAboutDto>
+@{
+    ViewData["Title"] = "Hakkımızda Yönetimi";
+    bool hasEntry = Model != null && Model.Any();
+}
+
+<style>
+    .shadow-soft { box-shadow: 0 2px 16px rgba(58, 48, 42, 0.04); }
+    .transition-transform-colors { transition: transform 0.2s ease-in-out, background-color 0.2s ease-in-out, color 0.2s ease-in-out; }
+    .material-symbols-outlined { font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24; }
+</style>
+
+<main class="admin-page">
+
+    <!-- Header -->
+    <header class="admin-header">
+        <div>
+            <p class="admin-badge">Sahara Admin</p>
+            <h1 class="admin-title">Hakkımızda Yönetimi</h1>
+            <p class="admin-subtitle">Sahara'nın hikayesini ve değerlerini anlatan içerikleri yönetin.</p>
+        </div>
+        @if (!hasEntry)
+        {
+            <a asp-controller="About" asp-action="CreateAbout" class="admin-btn-add">
+                <span class="material-symbols-outlined">add</span>
+                Yeni İçerik Ekle
+            </a>
+        }
+    </header>
+
+    @* Kayıt yoksa uyarı mesajı *@
+    @if (!hasEntry)
+    {
+        <div class="bg-surface-container-lowest rounded-xl shadow-soft border border-outline-variant/60 py-20 flex flex-col items-center justify-center text-center px-4">
+            <div class="w-16 h-16 bg-surface-container-high rounded-full flex items-center justify-center mb-4">
+                <span class="material-symbols-outlined text-secondary text-3xl">article</span>
+            </div>
+            <h3 class="font-headline text-xl font-medium text-on-surface mb-2">Henüz İçerik Yok</h3>
+            <p class="text-on-surface-variant max-w-sm mb-6 text-sm">Hakkımızda bölümü için henüz bir içerik oluşturulmamış. Yeni bir içerik ekleyerek başlayabilirsiniz.</p>
+            <a asp-controller="About" asp-action="CreateAbout"
+               class="inline-flex items-center justify-center bg-transparent border border-outline text-primary hover:bg-primary/5 transition-colors px-5 py-2.5 rounded-lg font-medium text-sm gap-2">
+                <span class="material-symbols-outlined text-[20px]">add</span>
+                İlk İçeriği Ekle
+            </a>
+        </div>
+    }
+    else
+    {
+        <!-- Data Table -->
+        <div class="bg-surface-container-lowest rounded-xl shadow-soft overflow-hidden border border-outline-variant/60">
+            <div class="overflow-x-auto">
+                <table class="w-full text-left border-collapse">
+                    <thead>
+                        <tr class="border-b border-outline-variant/60 bg-surface-container-low/50">
+                            <th class="py-4 px-6 font-medium text-secondary text-sm">AboutId</th>
+                            <th class="py-4 px-6 font-medium text-secondary text-sm">Görsel</th>
+                            <th class="py-4 px-6 font-medium text-secondary text-sm">Başlık</th>
+                            <th class="py-4 px-6 font-medium text-secondary text-sm w-1/3">Açıklama</th>
+                            <th class="py-4 px-6 font-medium text-secondary text-sm text-right">İşlemler</th>
+                        </tr>
+                    </thead>
+                    <tbody class="divide-y divide-outline-variant/40">
+                        @foreach (var item in Model)
+                        {
+                            <tr class="hover:bg-surface-container-low/30 transition-colors group">
+
+                                <!-- ID -->
+                                <td class="py-5 px-6 text-on-surface-variant text-sm">#@item.AboutId</td>
+
+                                <!-- Görsel -->
+                                <td class="py-5 px-6">
+                                    <div class="w-20 h-14 rounded-md overflow-hidden bg-surface-variant border border-outline-variant/40">
+                                        @if (!string.IsNullOrEmpty(item.AboutImageUrl))
+                                        {
+                                            <img src="@item.AboutImageUrl" alt="@item.AboutTitle"
+                                                 class="w-full h-full object-cover" />
+                                        }
+                                        else
+                                        {
+                                            <div class="w-full h-full flex items-center justify-center text-secondary">
+                                                <span class="material-symbols-outlined">image</span>
+                                            </div>
+                                        }
+                                    </div>
+                                </td>
+
+                                <!-- Başlık -->
+                                <td class="py-5 px-6 font-medium text-on-surface">@item.AboutTitle</td>
+
+                                <!-- Açıklama -->
+                                <td class="py-5 px-6 text-on-surface-variant text-sm max-w-xs">
+                                    <p class="truncate">@item.AboutDescription</p>
+                                </td>
+
+                                <!-- İşlemler -->
+                                <td class="py-5 px-6 text-right">
+                                    <div class="flex items-center justify-end gap-2 opacity-0 group-hover:opacity-100 transition-opacity">
+                                        <a asp-controller="About" asp-action="UpdateAbout" asp-route-id="@item.AboutId"
+                                           class="p-2 text-secondary hover:text-primary hover:bg-primary-fixed/30 rounded-full transition-transform-colors" title="Düzenle">
+                                            <span class="material-symbols-outlined text-[20px]">edit</span>
+                                        </a>
+                                        <a asp-controller="About" asp-action="DeleteAbout" asp-route-id="@item.AboutId"
+                                           class="p-2 text-secondary hover:text-error hover:bg-error-container/50 rounded-full transition-transform-colors" title="Sil">
+                                            <span class="material-symbols-outlined text-[20px]">delete</span>
+                                        </a>
+                                    </div>
+                                </td>
+
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <!-- Pagination -->
+        <div class="flex items-center justify-between mt-6 px-2">
+            <p class="text-sm text-secondary">
+                Toplam <span class="font-medium text-on-surface">@Model.Count</span> içerik gösteriliyor
+            </p>
+            <div class="flex items-center gap-1">
+                <button class="p-1.5 rounded-md text-outline hover:text-on-surface hover:bg-surface-container disabled:opacity-50 transition-colors" disabled>
+                    <span class="material-symbols-outlined text-[20px]">chevron_left</span>
+                </button>
+                <button class="w-8 h-8 flex items-center justify-center rounded-md bg-primary-container text-on-primary-container text-sm font-medium">1</button>
+                <button class="p-1.5 rounded-md text-outline hover:text-on-surface hover:bg-surface-container disabled:opacity-50 transition-colors" disabled>
+                    <span class="material-symbols-outlined text-[20px]">chevron_right</span>
+                </button>
+            </div>
+        </div>
+    }
+
+</main>

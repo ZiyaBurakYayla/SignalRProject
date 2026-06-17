@@ -1,0 +1,65 @@
+﻿using FluentValidation;
+using Microsoft.Extensions.DependencyInjection;
+using SignalR.BusinessLayer.Abstract;
+using SignalR.BusinessLayer.Concrete;
+using SignalR.DataAccessLayer.Abstract;
+using SignalR.DataAccessLayer.EntitiyFramework;
+using SignalR.DtoLayer.BookingDtos;
+
+namespace SignalR.BusinessLayer.Container
+{
+    public static class Extension
+    {
+        public static void ContainerDependencies(this IServiceCollection services)
+        {
+            services.AddScoped<IAboutService, AboutManager>();
+            services.AddScoped<IAboutDal, EfAboutDal>();
+
+            services.AddScoped<IBookingService, BookingManager>();
+            services.AddScoped<IBookingDal, EfBookingDal>();
+
+            services.AddScoped<ICategoryService, CategoryManager>();
+            services.AddScoped<ICategoryDal, EfCategoryDal>();
+
+            services.AddScoped<IContactService, ContactManager>();
+            services.AddScoped<IContactDal, EfContactDal>();
+
+            services.AddScoped<IDiscountService, DiscountManager>();
+            services.AddScoped<IDiscountDal, EfDiscountDal>();
+
+            services.AddScoped<IProductService, ProductManager>();
+            services.AddScoped<IProductDal, EfProductDal>();
+
+            services.AddScoped<ISocialMediaService, SocialMediaManager>();
+            services.AddScoped<ISocialMediaDal, EfSocialMediaDal>();
+
+            services.AddScoped<ITestimonialService, TestimonialManager>();
+            services.AddScoped<ITestimonialDal, EfTestimonialDal>();
+
+            services.AddScoped<IOrderService, OrderManager>();
+            services.AddScoped<IOrderDal, EfOrderDal>();
+
+            services.AddScoped<IOrderDetailService, OrderDetailManager>();
+            services.AddScoped<IOrderDetailDal, EfOrderDetailDal>();
+
+            services.AddScoped<IMoneyCaseService, MoneyCaseManager>();
+            services.AddScoped<IMoneyCaseDal, EfMoneyCaseDal>();
+
+            services.AddScoped<IOrderTableService, OrderTableManager>();
+            services.AddScoped<IOrderTableDal, EfOrderTableDal>();
+
+            services.AddScoped<ISliderService, SliderManager>();
+            services.AddScoped<ISliderDal, EfSliderDal>();
+
+            services.AddScoped<IBasketService, BasketManager>();
+            services.AddScoped<IBasketDal, EfBasketDal>();
+
+            services.AddScoped<INotificationService, NotificationManager>();
+            services.AddScoped<INotificationDal, EfNotificationDal>();
+
+            services.AddScoped<IMessageService, MessageManager>();
+            services.AddScoped<IMessageDal, EfMessageDal>();
+
+        }
+    }
+}

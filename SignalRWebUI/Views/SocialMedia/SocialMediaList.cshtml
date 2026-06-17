@@ -1,0 +1,121 @@
+@model List<ResultSocialMediaDto>
+@{
+    ViewData["Title"] = "Sosyal Medya Yönetimi";
+}
+
+<style>
+    .material-symbols-outlined { font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24; }
+</style>
+
+<div class="admin-page">
+
+    <!-- Header -->
+    <header class="admin-header">
+        <div>
+            <p class="admin-badge">Sahara Admin</p>
+            <h1 class="admin-title">Sosyal Medya Yönetimi</h1>
+            <p class="admin-subtitle">Restoranınızın bağlı olduğu sosyal medya hesaplarını yönetin.</p>
+        </div>
+        <a asp-controller="SocialMedia" asp-action="CreateSocialMedia" class="admin-btn-add">
+            <span class="material-symbols-outlined">add</span>
+            Yeni Ekle
+        </a>
+    </header>
+
+    <!-- List Card -->
+    <div class="bg-surface-container-low rounded-xl border border-outline-variant/60 shadow-[0_2px_16px_rgba(58,48,42,0.04)] overflow-hidden">
+
+        <!-- List Header -->
+        <div class="hidden md:grid grid-cols-12 gap-4 p-6 border-b border-outline-variant/60 bg-surface-container/50">
+            <div class="col-span-4 font-label font-semibold text-sm text-on-surface-variant">Platform & Başlık</div>
+            <div class="col-span-3 font-label font-semibold text-sm text-on-surface-variant">Bağlantı (URL)</div>
+            <div class="col-span-2 font-label font-semibold text-sm text-on-surface-variant">İkon</div>
+            <div class="col-span-1 font-label font-semibold text-sm text-on-surface-variant text-center">Durum</div>
+            <div class="col-span-2 font-label font-semibold text-sm text-on-surface-variant text-right">İşlemler</div>
+        </div>
+
+        <!-- Items -->
+        <div class="divide-y divide-outline-variant/60">
+
+            @if (Model != null && Model.Any())
+            {
+                @foreach (var item in Model)
+                {
+                    <div class="grid grid-cols-1 md:grid-cols-12 gap-4 p-6 items-center hover:bg-surface-variant/30 transition-colors duration-200 group @(!item.Status ? "opacity-70" : "")">
+
+                        <!-- Platform & Başlık -->
+                        <div class="col-span-1 md:col-span-4 flex items-center gap-4">
+                            <div class="w-12 h-12 rounded-lg bg-surface flex items-center justify-center border border-outline-variant/40 @(item.Status ? "text-primary" : "text-on-surface-variant") group-hover:scale-105 transition-transform">
+                                <span class="material-symbols-outlined text-[24px]">@item.Icon</span>
+                            </div>
+                            <div>
+                                <h3 class="font-headline text-lg font-semibold @(item.Status ? "text-on-background" : "text-on-surface-variant")">@item.Title</h3>
+                                <p class="font-body text-xs text-on-surface-variant mt-0.5">ID: @item.SocialMediaId</p>
+                            </div>
+                        </div>
+
+                        <!-- URL -->
+                        <div class="col-span-1 md:col-span-3 flex items-center text-sm font-body text-on-surface-variant">
+                            <span class="material-symbols-outlined text-[16px] mr-2 text-outline flex-shrink-0">link</span>
+                            <a href="@item.Url" target="_blank"
+                               class="hover:text-primary hover:underline truncate">@item.Url</a>
+                        </div>
+
+                        <!-- İkon adı -->
+                        <div class="col-span-1 md:col-span-2 text-sm font-body text-on-surface-variant font-mono">
+                            @item.Icon
+                        </div>
+
+                        <!-- Durum -->
+                        <div class="col-span-1 md:col-span-1 flex items-center justify-start md:justify-center">
+                            @if (item.Status)
+                            {
+                                <span class="inline-flex items-center gap-1 px-2 py-1 rounded-full bg-primary-fixed text-on-primary-fixed-variant text-xs font-semibold font-label">
+                                    <span class="w-1.5 h-1.5 rounded-full bg-primary inline-block"></span>
+                                    Aktif
+                                </span>
+                            }
+                            else
+                            {
+                                <span class="inline-flex items-center gap-1 px-2 py-1 rounded-full bg-surface-variant text-on-surface-variant text-xs font-semibold font-label">
+                                    <span class="w-1.5 h-1.5 rounded-full bg-outline inline-block"></span>
+                                    Pasif
+                                </span>
+                            }
+                        </div>
+
+                        <!-- İşlemler -->
+                        <div class="col-span-1 md:col-span-2 flex items-center justify-end gap-2">
+                            <a asp-controller="SocialMedia" asp-action="UpdateSocialMedia" asp-route-id="@item.SocialMediaId"
+                               class="p-2 text-on-surface-variant hover:text-primary hover:bg-primary-fixed rounded-lg transition-colors" title="Düzenle">
+                                <span class="material-symbols-outlined text-[20px]">edit</span>
+                            </a>
+                            <a asp-controller="SocialMedia" asp-action="DeleteSocialMedia" asp-route-id="@item.SocialMediaId"
+                               class="p-2 text-on-surface-variant hover:text-error hover:bg-error-container rounded-lg transition-colors" title="Sil">
+                                <span class="material-symbols-outlined text-[20px]">delete</span>
+                            </a>
+                        </div>
+
+                    </div>
+                }
+            }
+            else
+            {
+                <div class="flex flex-col items-center justify-center p-16 border-dashed">
+                    <span class="material-symbols-outlined text-[48px] text-outline mb-4">share</span>
+                    <h3 class="font-headline text-xl font-medium text-on-background mb-2">Henüz Sosyal Medya Hesabı Eklenmedi</h3>
+                    <p class="font-body text-sm text-on-surface-variant text-center max-w-md mb-6">
+                        Misafirlerinizin sizi dijital dünyada bulabilmesi için sosyal medya hesaplarınızı eklemeye başlayın.
+                    </p>
+                    <a asp-controller="SocialMedia" asp-action="CreateSocialMedia"
+                       class="inline-flex items-center justify-center px-6 py-2 border border-primary text-primary rounded-lg font-label font-medium hover:bg-primary-fixed transition-colors">
+                        <span class="material-symbols-outlined mr-2 text-[20px]">add</span>
+                        İlk Hesabı Ekle
+                    </a>
+                </div>
+            }
+
+        </div>
+    </div>
+
+</div>

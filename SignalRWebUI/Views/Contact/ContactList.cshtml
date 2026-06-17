@@ -1,0 +1,125 @@
+@model List<ResultContactDto>
+@{
+    ViewData["Title"] = "İletişim Bilgileri";
+    bool hasEntry = Model != null && Model.Any();
+}
+
+<style>
+    .material-symbols-outlined { font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24; }
+</style>
+
+<main class="admin-page">
+
+    <!-- Header -->
+    <header class="admin-header">
+        <div>
+            <p class="admin-badge">Sahara Admin</p>
+            <h1 class="admin-title">İletişim Bilgileri Yönetimi</h1>
+            <p class="admin-subtitle">Restoranınızın ulaşım ve iletişim bilgilerini yönetin.</p>
+        </div>
+        @if (!hasEntry)
+        {
+            <a asp-controller="Contact" asp-action="CreateContact" class="admin-btn-add">
+                <span class="material-symbols-outlined">add</span>
+                Yeni İletişim Bilgisi Ekle
+            </a>
+        }
+    </header>
+
+    <!-- Table Card -->
+    <div class="bg-surface-container-lowest rounded-xl shadow-[0_2px_16px_rgba(58,48,42,0.04)] border border-outline-variant/60 overflow-hidden">
+        <div class="overflow-x-auto">
+            <table class="w-full text-left border-collapse">
+                <thead>
+                    <tr class="bg-surface-container-low border-b border-outline-variant/60 text-on-surface-variant font-medium text-sm tracking-wide">
+                        <th class="py-4 px-6 whitespace-nowrap">#ID</th>
+                        <th class="py-4 px-6 whitespace-nowrap">Lokasyon</th>
+                        <th class="py-4 px-6 whitespace-nowrap">Telefon</th>
+                        <th class="py-4 px-6 whitespace-nowrap">E-posta</th>
+                        <th class="py-4 px-6">Özet Bilgi</th>
+                        <th class="py-4 px-6 text-right whitespace-nowrap">İşlemler</th>
+                    </tr>
+                </thead>
+                <tbody class="divide-y divide-outline-variant/40 text-on-surface">
+
+                    @if (Model != null && Model.Any())
+                    {
+                        @foreach (var item in Model)
+                        {
+                            <tr class="hover:bg-surface-container-low/50 transition-colors group">
+
+                                <!-- ID -->
+                                <td class="py-4 px-6 text-sm text-on-surface-variant font-mono">#CNT-@item.ContactId</td>
+
+                                <!-- Lokasyon -->
+                                <td class="py-4 px-6">
+                                    <div class="font-medium text-on-surface">@item.Location</div>
+                                </td>
+
+                                <!-- Telefon -->
+                                <td class="py-4 px-6 text-sm whitespace-nowrap">@item.Phone</td>
+
+                                <!-- E-posta -->
+                                <td class="py-4 px-6 text-sm">@item.Email</td>
+
+                                <!-- Footer Description -->
+                                <td class="py-4 px-6 text-sm text-on-surface-variant max-w-xs">
+                                    <p class="truncate">@item.FooterDescription</p>
+                                </td>
+
+                                <!-- İşlemler -->
+                                <td class="py-4 px-6 text-right">
+                                    <div class="flex justify-end gap-3 opacity-0 group-hover:opacity-100 transition-opacity">
+                                        <a asp-controller="Contact" asp-action="UpdateContact" asp-route-id="@item.ContactId"
+                                           class="text-secondary hover:text-primary transition-colors p-1" title="Düzenle">
+                                            <span class="material-symbols-outlined text-[20px]">edit</span>
+                                        </a>
+                                        <a asp-controller="Contact" asp-action="DeleteContact" asp-route-id="@item.ContactId"
+                                           class="text-secondary hover:text-error transition-colors p-1" title="Sil">
+                                            <span class="material-symbols-outlined text-[20px]">delete</span>
+                                        </a>
+                                    </div>
+                                </td>
+
+                            </tr>
+                        }
+                    }
+                    else
+                    {
+                        <tr>
+                            <td colspan="6" class="py-20 text-center">
+                                <div class="flex flex-col items-center justify-center text-secondary gap-3">
+                                    <span class="material-symbols-outlined text-[3rem] opacity-50">contacts</span>
+                                    <p class="font-label text-sm">Henüz iletişim bilgisi bulunmuyor.</p>
+                                    <a asp-controller="Contact" asp-action="CreateContact"
+                                       class="inline-flex items-center gap-1.5 text-primary hover:underline text-sm font-medium">
+                                        <span class="material-symbols-outlined text-[18px]">add</span>
+                                        İlk kaydı ekleyin
+                                    </a>
+                                </div>
+                            </td>
+                        </tr>
+                    }
+
+                </tbody>
+            </table>
+        </div>
+
+        <!-- Pagination Footer -->
+        <div class="bg-surface-container-lowest px-6 py-4 border-t border-outline-variant/60 flex items-center justify-between">
+            <p class="text-sm text-on-surface-variant">
+                Toplam <span class="font-medium text-on-surface">@(Model?.Count ?? 0)</span> kayıt
+            </p>
+            <div class="flex items-center gap-2">
+                <button class="w-8 h-8 flex items-center justify-center rounded border border-outline-variant text-on-surface-variant hover:bg-surface-container-low hover:text-primary transition-colors disabled:opacity-50 disabled:cursor-not-allowed" disabled>
+                    <span class="material-symbols-outlined text-[20px]">chevron_left</span>
+                </button>
+                <button class="w-8 h-8 flex items-center justify-center rounded bg-primary text-on-primary font-medium text-sm">1</button>
+                <button class="w-8 h-8 flex items-center justify-center rounded border border-outline-variant text-on-surface-variant hover:bg-surface-container-low hover:text-primary transition-colors disabled:opacity-50" disabled>
+                    <span class="material-symbols-outlined text-[20px]">chevron_right</span>
+                </button>
+            </div>
+        </div>
+    </div>
+
+</main>

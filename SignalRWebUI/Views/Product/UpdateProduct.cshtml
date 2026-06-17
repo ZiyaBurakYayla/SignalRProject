@@ -1,0 +1,219 @@
+@model UpdateProductDto
+@{
+    ViewData["Title"] = "Ürün Güncelle";
+}
+
+<style>
+    .material-symbols-outlined { font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24; }
+    .material-symbols-outlined.fill { font-variation-settings: 'FILL' 1; }
+    ::-webkit-scrollbar { width: 8px; height: 8px; }
+    ::-webkit-scrollbar-track { background: transparent; }
+    ::-webkit-scrollbar-thumb { background: #d8d0c8; border-radius: 4px; }
+    ::-webkit-scrollbar-thumb:hover { background: #9a9088; }
+    .shadow-soft { box-shadow: 0 2px 16px rgba(58, 48, 42, 0.04); }
+</style>
+
+<main class="max-w-4xl mx-auto p-4 md:p-8 lg:p-12">
+
+    <!-- Header Section -->
+    <header class="mb-10 flex items-center justify-between">
+        <div>
+            <nav aria-label="Breadcrumb" class="flex text-sm text-secondary mb-2">
+                <ol class="inline-flex items-center space-x-1 md:space-x-2">
+                    <li class="inline-flex items-center">
+                        <a asp-controller="Product" asp-action="ProductList"
+                           class="inline-flex items-center hover:text-primary transition-colors">
+                            Ürünler
+                        </a>
+                    </li>
+                    <li>
+                        <div class="flex items-center">
+                            <span class="material-symbols-outlined text-sm mx-1 text-outline-variant">chevron_right</span>
+                            <span class="text-on-surface-variant font-medium">@Model?.ProductName</span>
+                        </div>
+                    </li>
+                </ol>
+            </nav>
+            <h1 class="font-headline text-4xl md:text-5xl font-bold tracking-tight text-on-surface">Ürün Güncelle</h1>
+        </div>
+        <div class="hidden sm:flex items-center gap-3">
+            <a asp-controller="Product" asp-action="ProductList"
+               class="px-5 py-2.5 rounded-lg border border-outline-variant text-on-surface-variant hover:bg-surface-container-highest transition-colors font-label font-medium">
+                Vazgeç
+            </a>
+            <button type="submit" form="updateProductForm"
+                    class="px-5 py-2.5 rounded-lg bg-primary text-on-primary hover:bg-on-primary-fixed-variant transition-colors shadow-sm font-label font-medium flex items-center gap-2">
+                <span class="material-symbols-outlined text-[20px]">save</span>
+                Güncelle
+            </button>
+        </div>
+    </header>
+
+    <!-- Form Layout -->
+    <form id="updateProductForm" asp-controller="Product" asp-action="UpdateProduct" method="post"
+          class="grid grid-cols-1 lg:grid-cols-3 gap-8 items-start">
+
+        @* Hidden fields *@
+        <input type="hidden" asp-for="ProductId" />
+
+        <!-- Left Column: Primary Details -->
+        <div class="lg:col-span-2 space-y-8">
+
+            <!-- Basic Information Card -->
+            <div class="bg-surface-container-lowest rounded-xl p-6 md:p-8 shadow-soft border border-outline-variant/60">
+                <h2 class="font-headline text-2xl font-semibold mb-6 flex items-center gap-2">
+                    <span class="material-symbols-outlined text-primary">info</span>
+                    Temel Bilgiler
+                </h2>
+                <div class="space-y-6">
+
+                    <!-- Ürün Adı -->
+                    <div>
+                        <label asp-for="ProductName" class="block text-sm font-medium text-on-surface-variant mb-2 font-label">Ürün Adı</label>
+                        <input asp-for="ProductName"
+                               class="block w-full rounded-lg border border-outline-variant bg-surface-bright text-on-surface shadow-sm focus:border-primary focus:ring-1 focus:ring-primary sm:text-sm p-3 transition-colors placeholder:text-secondary outline-none" />
+                        <span asp-validation-for="ProductName" class="text-error text-xs mt-1 block"></span>
+                    </div>
+
+                    <!-- Açıklama -->
+                    <div>
+                        <label asp-for="ProductDescription" class="block text-sm font-medium text-on-surface-variant mb-2 font-label">Açıklama</label>
+                        <textarea asp-for="ProductDescription" rows="4"
+                                  class="block w-full rounded-lg border border-outline-variant bg-surface-bright text-on-surface shadow-sm focus:border-primary focus:ring-1 focus:ring-primary sm:text-sm p-3 transition-colors placeholder:text-secondary outline-none"></textarea>
+                        <p class="mt-2 text-xs text-secondary">Müşterilerin menüde göreceği iştah açıcı açıklama.</p>
+                    </div>
+
+                </div>
+            </div>
+
+            <!-- Pricing & Image URL Card -->
+            <div class="bg-surface-container-lowest rounded-xl p-6 md:p-8 shadow-soft border border-outline-variant/60">
+                <h2 class="font-headline text-2xl font-semibold mb-6 flex items-center gap-2">
+                    <span class="material-symbols-outlined text-primary">sell</span>
+                    Fiyatlandırma &amp; Görsel
+                </h2>
+                <div class="grid grid-cols-1 sm:grid-cols-2 gap-6">
+
+                    <!-- Fiyat -->
+                    <div>
+                        <label asp-for="ProductPrice" class="block text-sm font-medium text-on-surface-variant mb-2 font-label">Fiyat</label>
+                        <div class="relative rounded-lg shadow-sm">
+                            <input asp-for="ProductPrice"
+                                   class="block w-full rounded-lg border border-outline-variant bg-surface-bright text-on-surface focus:border-primary focus:ring-1 focus:ring-primary sm:text-sm p-3 pr-12 transition-colors text-right outline-none" />
+                            <div class="pointer-events-none absolute inset-y-0 right-0 flex items-center pr-4">
+                                <span class="text-secondary sm:text-sm">TL</span>
+                            </div>
+                        </div>
+                        <span asp-validation-for="ProductPrice" class="text-error text-xs mt-1 block"></span>
+                    </div>
+
+                    <!-- Kategori -->
+                    <div>
+                        <label asp-for="CategoryId" class="block text-sm font-medium text-on-surface-variant mb-2 font-label">Kategori</label>
+                        <select asp-for="CategoryId" asp-items="ViewBag.values"
+                                class="block w-full rounded-lg border border-outline-variant bg-surface-bright text-on-surface focus:border-primary focus:ring-1 focus:ring-primary sm:text-sm p-3 transition-colors outline-none">
+                            <option value="">-- Kategori Seçin --</option>
+                        </select>
+                        <span asp-validation-for="CategoryId" class="text-error text-xs mt-1 block"></span>
+                    </div>
+
+                    <!-- Görsel URL (full width) -->
+                    <div class="sm:col-span-2">
+                        <label asp-for="ProductImageUrl" class="block text-sm font-medium text-on-surface-variant mb-2 font-label">Görsel URL</label>
+                        <input asp-for="ProductImageUrl"
+                               class="block w-full rounded-lg border border-outline-variant bg-surface-bright text-on-surface focus:border-primary focus:ring-1 focus:ring-primary sm:text-sm p-3 transition-colors outline-none"
+                               placeholder="https://..." />
+                    </div>
+
+                </div>
+            </div>
+
+        </div>
+
+        <!-- Right Column: Image Preview & Status -->
+        <div class="space-y-8">
+
+            <!-- Image Preview Card -->
+            <div class="bg-surface-container-lowest rounded-xl p-6 md:p-8 shadow-soft border border-outline-variant/60">
+                <h2 class="font-headline text-2xl font-semibold mb-6 flex items-center gap-2">
+                    <span class="material-symbols-outlined text-primary">image</span>
+                    Görsel Önizleme
+                </h2>
+                <div class="aspect-square w-full relative rounded-lg overflow-hidden border border-outline-variant/30 bg-surface-container-highest group">
+                    @if (!string.IsNullOrEmpty(Model?.ProductImageUrl))
+                    {
+                        <img src="@Model.ProductImageUrl" alt="@Model.ProductName"
+                             class="object-cover w-full h-full transition-transform duration-500 group-hover:scale-105" />
+                    }
+                    else
+                    {
+                        <div class="w-full h-full flex flex-col items-center justify-center text-secondary gap-2">
+                            <span class="material-symbols-outlined text-[3rem]">image</span>
+                            <span class="text-xs font-label">Görsel yok</span>
+                        </div>
+                    }
+                </div>
+                <p class="text-xs text-secondary text-center mt-3">Önerilen boyut: 1080x1080px. Maksimum 5MB.</p>
+            </div>
+
+            <!-- Status Card -->
+            <div class="bg-surface-container-lowest rounded-xl p-6 md:p-8 shadow-soft border border-outline-variant/60">
+                <h2 class="font-headline text-2xl font-semibold mb-6 flex items-center gap-2">
+                    <span class="material-symbols-outlined text-primary">toggle_on</span>
+                    Durum
+                </h2>
+                <div>
+                    <label class="block text-sm font-medium text-on-surface-variant mb-4 font-label">Yayın Durumu</label>
+                    <div class="space-y-3">
+
+                        <!-- Aktif -->
+                        <label class="relative flex cursor-pointer items-start gap-4 p-4 rounded-lg border @(Model != null && Model.ProductStatus ? "border-primary/20 bg-primary/5" : "border-outline-variant/40 hover:bg-surface-container-highest") transition-colors">
+                            <div class="flex h-6 items-center">
+                                <input type="radio" id="statusActive" name="ProductStatus" value="true"
+                                       @(Model != null && Model.ProductStatus ? "checked=\"checked\"" : "")
+                                       class="h-4 w-4 border-outline-variant text-primary focus:ring-primary bg-surface-bright" />
+                            </div>
+                            <div class="flex flex-col">
+                                <span class="block text-sm font-medium text-on-surface">Aktif</span>
+                                <span class="block text-xs text-secondary mt-1">Müşteriler sipariş verebilir.</span>
+                            </div>
+                        </label>
+
+                        <!-- Pasif -->
+                        <label class="relative flex cursor-pointer items-start gap-4 p-4 rounded-lg border @(Model != null && !Model.ProductStatus ? "border-primary/20 bg-primary/5" : "border-outline-variant/40 hover:bg-surface-container-highest") transition-colors">
+                            <div class="flex h-6 items-center">
+                                <input type="radio" id="statusPassive" name="ProductStatus" value="false"
+                                       @(Model != null && !Model.ProductStatus ? "checked=\"checked\"" : "")
+                                       class="h-4 w-4 border-outline-variant text-primary focus:ring-primary bg-surface-bright" />
+                            </div>
+                            <div class="flex flex-col">
+                                <span class="block text-sm font-medium text-on-surface">Pasif</span>
+                                <span class="block text-xs text-secondary mt-1">Menüde gizlenir, sipariş edilemez.</span>
+                            </div>
+                        </label>
+
+                    </div>
+                </div>
+            </div>
+
+        </div>
+
+        <!-- Mobile Actions (Sticky Bottom) -->
+        <div class="col-span-full sm:hidden fixed bottom-0 left-0 right-0 p-4 bg-surface/95 backdrop-blur-md border-t border-outline-variant/60 shadow-[0_-4px_16px_rgba(58,48,42,0.05)] z-50 flex gap-3">
+            <a asp-controller="Product" asp-action="ProductList"
+               class="flex-1 px-4 py-3 rounded-lg border border-outline-variant text-on-surface-variant bg-surface hover:bg-surface-container-highest transition-colors font-label font-medium text-center">
+                Vazgeç
+            </a>
+            <button type="submit"
+                    class="flex-[2] px-4 py-3 rounded-lg bg-primary text-on-primary hover:bg-on-primary-fixed-variant transition-colors shadow-sm font-label font-medium text-center flex items-center justify-center gap-2">
+                <span class="material-symbols-outlined text-[20px]">save</span>
+                Güncelle
+            </button>
+        </div>
+
+        <!-- Mobile spacer -->
+        <div class="h-20 sm:hidden col-span-full"></div>
+
+    </form>
+
+</main>

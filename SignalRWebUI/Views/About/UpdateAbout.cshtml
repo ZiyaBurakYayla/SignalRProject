@@ -1,0 +1,181 @@
+@model UpdateAboutDto
+@{
+    ViewData["Title"] = "Hakkımızda İçeriği Güncelle";
+}
+
+<style>
+    .material-symbols-outlined { font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24; }
+    .glass-panel {
+        background: rgba(246, 240, 232, 0.7);
+        backdrop-filter: blur(12px);
+        -webkit-backdrop-filter: blur(12px);
+        border: 1px solid rgba(216, 208, 200, 0.4);
+    }
+    .soft-shadow { box-shadow: 0 4px 24px rgba(58, 48, 42, 0.05); }
+</style>
+
+<main class="max-w-4xl mx-auto p-8 md:p-12">
+
+    <!-- Header -->
+    <header class="mb-10 text-center md:text-left border-b border-outline-variant/40 pb-6">
+        <a asp-controller="About" asp-action="AboutList"
+           class="inline-flex items-center text-secondary hover:text-primary transition-colors text-sm font-medium mb-4">
+            <span class="material-symbols-outlined mr-1" style="font-size: 18px;">arrow_back</span>
+            Listeye Dön
+        </a>
+        <h1 class="text-4xl md:text-5xl font-headline font-semibold text-on-surface tracking-tight mb-3">
+            Hakkımızda İçeriği Güncelle
+        </h1>
+        <p class="text-on-surface-variant text-lg max-w-2xl font-body leading-relaxed">
+            Sahara'nın hikayesini şekillendirin. Değişiklikler anında web sitesine yansıyacaktır.
+        </p>
+    </header>
+
+    <!-- Form -->
+    <form asp-controller="About" asp-action="UpdateAbout" method="post"
+          class="grid grid-cols-1 md:grid-cols-12 gap-8 items-start">
+
+        <input type="hidden" asp-for="AboutId" />
+
+        <!-- Sol Kolon: Görsel -->
+        <div class="md:col-span-5 space-y-8">
+
+            <!-- Kapak Görseli -->
+            <div class="glass-panel rounded-xl p-6 soft-shadow flex flex-col gap-5">
+                <div class="flex justify-between items-center">
+                    <h3 class="text-xl font-headline font-medium text-on-surface">Kapak Görseli</h3>
+                    <span class="material-symbols-outlined text-primary text-xl" title="Required">stars</span>
+                </div>
+
+                <!-- Önizleme -->
+                <div class="relative group rounded-lg overflow-hidden border border-outline-variant/60 aspect-square bg-surface-container-highest">
+                    @if (!string.IsNullOrEmpty(Model?.AboutImageUrl))
+                    {
+                        <img id="imagePreview" src="@Model.AboutImageUrl" alt="@Model.AboutTitle"
+                             class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105" />
+                    }
+                    else
+                    {
+                        <div id="imagePlaceholder" class="w-full h-full flex flex-col items-center justify-center text-secondary gap-2">
+                            <span class="material-symbols-outlined text-[3rem]">image</span>
+                            <span class="text-xs font-label">Görsel yok</span>
+                        </div>
+                        <img id="imagePreview" src="" alt="" class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105 hidden" />
+                    }
+                </div>
+
+                <!-- Görsel URL -->
+                <div>
+                    <label class="block text-xs font-semibold text-on-surface-variant font-label uppercase tracking-wide mb-2">Görsel URL</label>
+                    <div class="relative">
+                        <div class="pointer-events-none absolute inset-y-0 left-0 flex items-center pl-3">
+                            <span class="material-symbols-outlined text-secondary text-[18px]">link</span>
+                        </div>
+                        <input asp-for="AboutImageUrl" id="imageUrlInput"
+                               class="w-full bg-surface-container-lowest border border-outline-variant/80 rounded-lg pl-9 pr-4 py-2.5 text-on-surface font-body text-sm focus:ring-2 focus:ring-primary/40 focus:border-primary transition-all outline-none"
+                               placeholder="https://..." />
+                    </div>
+                </div>
+
+                <p class="text-sm text-secondary font-label leading-relaxed">
+                    Önerilen boyut: 1024x1024px. JPG, PNG, WEBP formatları desteklenmektedir.
+                </p>
+            </div>
+
+        </div>
+
+        <!-- Sağ Kolon: İçerik -->
+        <div class="md:col-span-7 glass-panel rounded-xl p-8 soft-shadow flex flex-col gap-8 h-full">
+
+            <div>
+                <h2 class="text-2xl font-headline font-semibold text-on-surface mb-1 border-b border-outline-variant/30 pb-2">
+                    İçerik Detayları
+                </h2>
+            </div>
+
+            <!-- Başlık -->
+            <div class="space-y-2">
+                <label asp-for="AboutTitle" class="block text-sm font-semibold text-on-surface font-label tracking-wide uppercase">
+                    Başlık
+                </label>
+                <input asp-for="AboutTitle"
+                       class="w-full bg-surface-container-lowest border border-outline-variant/80 rounded-lg px-4 py-3 text-on-surface font-body focus:ring-2 focus:ring-primary/40 focus:border-primary transition-all duration-200 shadow-sm outline-none" />
+                <span asp-validation-for="AboutTitle" class="text-error text-xs mt-1 block"></span>
+            </div>
+
+            <!-- Açıklama -->
+            <div class="space-y-2 flex-grow flex flex-col">
+                <div class="flex justify-between items-end mb-1">
+                    <label asp-for="AboutDescription" class="block text-sm font-semibold text-on-surface font-label tracking-wide uppercase">
+                        Açıklama
+                    </label>
+                </div>
+                <!-- Faux Toolbar -->
+                <div class="bg-surface-variant border border-outline-variant/80 border-b-0 rounded-t-lg px-3 py-2 flex gap-2 overflow-x-auto items-center">
+                    <button class="p-1.5 text-on-surface-variant hover:text-primary hover:bg-surface rounded transition-colors" title="Kalın" type="button">
+                        <span class="material-symbols-outlined text-[18px]">format_bold</span>
+                    </button>
+                    <button class="p-1.5 text-on-surface-variant hover:text-primary hover:bg-surface rounded transition-colors" title="İtalik" type="button">
+                        <span class="material-symbols-outlined text-[18px]">format_italic</span>
+                    </button>
+                    <button class="p-1.5 text-on-surface-variant hover:text-primary hover:bg-surface rounded transition-colors" title="Altı Çizili" type="button">
+                        <span class="material-symbols-outlined text-[18px]">format_underlined</span>
+                    </button>
+                    <div class="w-px h-5 bg-outline-variant mx-1"></div>
+                    <button class="p-1.5 text-on-surface-variant hover:text-primary hover:bg-surface rounded transition-colors" title="Sola Hizala" type="button">
+                        <span class="material-symbols-outlined text-[18px]">format_align_left</span>
+                    </button>
+                    <button class="p-1.5 text-on-surface-variant hover:text-primary hover:bg-surface rounded transition-colors" title="Ortala" type="button">
+                        <span class="material-symbols-outlined text-[18px]">format_align_center</span>
+                    </button>
+                    <div class="w-px h-5 bg-outline-variant mx-1"></div>
+                    <button class="p-1.5 text-on-surface-variant hover:text-primary hover:bg-surface rounded transition-colors" title="Bağlantı" type="button">
+                        <span class="material-symbols-outlined text-[18px]">link</span>
+                    </button>
+                </div>
+                <textarea asp-for="AboutDescription" rows="8"
+                          class="w-full flex-grow bg-surface-container-lowest border border-outline-variant/80 rounded-b-lg px-4 py-4 text-on-surface font-body focus:ring-2 focus:ring-primary/40 focus:border-primary transition-all duration-200 shadow-sm outline-none resize-none"></textarea>
+            </div>
+
+            <!-- Action Buttons -->
+            <div class="pt-6 border-t border-outline-variant/40 flex flex-col-reverse sm:flex-row justify-end gap-4 mt-auto">
+                <a asp-controller="About" asp-action="AboutList"
+                   class="px-6 py-3 rounded-lg border border-outline-variant text-on-surface font-label font-semibold hover:bg-surface-variant hover:text-primary transition-all duration-200 flex items-center justify-center gap-2">
+                    <span class="material-symbols-outlined text-[20px]">close</span>
+                    Vazgeç
+                </a>
+                <button type="submit"
+                        class="px-8 py-3 rounded-lg bg-primary text-on-primary font-label font-semibold hover:bg-on-primary-fixed-variant transition-all duration-200 shadow-[0_4px_12px_rgba(194,101,42,0.2)] hover:shadow-[0_6px_16px_rgba(194,101,42,0.3)] flex items-center justify-center gap-2">
+                    <span class="material-symbols-outlined text-[20px]">save</span>
+                    Güncelle
+                </button>
+            </div>
+
+        </div>
+
+    </form>
+
+</main>
+
+<script>
+    // Görsel URL değişince önizlemeyi güncelle
+    const imageUrlInput = document.getElementById('imageUrlInput');
+    const imagePreview = document.getElementById('imagePreview');
+    const imagePlaceholder = document.getElementById('imagePlaceholder');
+
+    imageUrlInput.addEventListener('input', function () {
+        const url = this.value.trim();
+        if (url.length > 10) {
+            imagePreview.src = url;
+            imagePreview.classList.remove('hidden');
+            if (imagePlaceholder) imagePlaceholder.classList.add('hidden');
+            imagePreview.onerror = function () {
+                imagePreview.classList.add('hidden');
+                if (imagePlaceholder) imagePlaceholder.classList.remove('hidden');
+            };
+        } else {
+            imagePreview.classList.add('hidden');
+            if (imagePlaceholder) imagePlaceholder.classList.remove('hidden');
+        }
+    });
+</script>

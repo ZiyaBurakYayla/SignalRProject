@@ -1,0 +1,170 @@
+@model List<ResultBookingDto>
+@{
+    ViewData["Title"] = "Rezervasyon Yönetimi";
+}
+
+<style>
+    .material-symbols-outlined { font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24; }
+    .shadow-soft { box-shadow: 0 2px 16px rgba(58, 48, 42, 0.04); }
+    .table-scroll::-webkit-scrollbar { height: 6px; }
+    .table-scroll::-webkit-scrollbar-track { background: #f2ece4; }
+    .table-scroll::-webkit-scrollbar-thumb { background-color: #d8d0c8; border-radius: 9999px; }
+</style>
+
+<main class="admin-page">
+
+    <!-- Header -->
+    <header class="admin-header">
+        <div>
+            <p class="admin-badge">Sahara Admin</p>
+            <h1 class="admin-title">Rezervasyon Yönetimi</h1>
+            <p class="admin-subtitle">Tüm rezervasyonları görüntüleyin ve yönetin.</p>
+        </div>
+        <a asp-controller="Booking" asp-action="CreateBooking" class="admin-btn-add">
+            <span class="material-symbols-outlined">add</span>
+            Yeni Rezervasyon
+        </a>
+    </header>
+
+    <!-- Connection Status -->
+    <div class="flex items-center gap-2 text-sm text-on-surface-variant font-body mb-2">
+        <span id="connDot" style="display:inline-block;width:10px;height:10px;border-radius:50%;background:#9a9088;flex-shrink:0"></span>
+        <span id="connstatus">Bağlanıyor...</span>
+    </div>
+
+    <!-- Dynamic Booking Table -->
+    <div class="bg-surface-container-low rounded-xl border border-outline-variant/40 shadow-soft overflow-hidden">
+        <div class="overflow-x-auto table-scroll">
+            <div id="bookingList"></div>
+        </div>
+
+        <!-- Footer -->
+        <div class="px-6 py-4 border-t border-outline-variant/60 flex items-center justify-between bg-surface-container/30">
+            <span class="font-body text-sm text-on-surface-variant">
+                Toplam <span id="bookingCount" class="font-medium text-on-surface">0</span> rezervasyon
+            </span>
+            <a asp-controller="Booking" asp-action="CreateBooking" class="text-sm text-primary hover:underline font-medium">
+                + Yeni Rezervasyon
+            </a>
+        </div>
+    </div>
+
+</main>
+
+@section Scripts {
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/microsoft-signalr/7.0.5/signalr.min.js"></script>
+    <script type="text/javascript">
+        (function () {
+            var connection = new signalR.HubConnectionBuilder()
+                .withUrl("https://localhost:7196/signalrhub")
+                .build();
+
+            function updateConnStatus(state) {
+                var dot = document.getElementById("connDot");
+                var label = document.getElementById("connstatus");
+                if (label) label.innerText = state;
+                if (dot) {
+                    if (state === "Connected") dot.style.background = "#22c55e";
+                    else if (state.startsWith("Hata")) dot.style.background = "#c0392b";
+                    else dot.style.background = "#9a9088";
+                }
+            }
+
+            updateConnStatus("Bağlanıyor...");
+
+            connection.on("ReceiveBookingList", function (values) {
+                var html = `<table class="w-full text-left border-collapse whitespace-nowrap">
+                    <thead>
+                        <tr class="border-b border-outline-variant/60 bg-surface-container/50">
+                            <th class="px-6 py-4 font-label text-xs uppercase tracking-wider text-on-surface-variant font-semibold">#</th>
+                            <th class="px-6 py-4 font-label text-xs uppercase tracking-wider text-on-surface-variant font-semibold">Ad Soyad</th>
+                            <th class="px-6 py-4 font-label text-xs uppercase tracking-wider text-on-surface-variant font-semibold">Telefon</th>
+                            <th class="px-6 py-4 font-label text-xs uppercase tracking-wider text-on-surface-variant font-semibold">E-posta</th>
+                            <th class="px-6 py-4 font-label text-xs uppercase tracking-wider text-on-surface-variant font-semibold">Kişi</th>
+                            <th class="px-6 py-4 font-label text-xs uppercase tracking-wider text-on-surface-variant font-semibold">Tarih</th>
+                            <th class="px-6 py-4 font-label text-xs uppercase tracking-wider text-on-surface-variant font-semibold">Durum</th>
+                            <th class="px-6 py-4 font-label text-xs uppercase tracking-wider text-on-surface-variant font-semibold text-right">İşlemler</th>
+                        </tr>
+                    </thead>
+                    <tbody class="divide-y divide-outline-variant/30 font-body text-sm text-on-surface">`;
+
+                values.forEach(function (item, index) {
+                    var date = new Date(item.date);
+                    var dateStr = date.toLocaleDateString('tr-TR', { day: '2-digit', month: 'short', year: 'numeric' });
+                    var timeStr = date.toLocaleTimeString('tr-TR', { hour: '2-digit', minute: '2-digit' });
+
+                    var desc = (item.description || '').trim();
+                    var statusBadge = '';
+                    if (desc === 'Rezervasyon Onaylandı') {
+                        statusBadge = `<span class="inline-flex items-center gap-1 px-2.5 py-1 rounded-md text-xs font-semibold bg-green-100 text-green-700">
+                            <span class="material-symbols-outlined text-[13px]">check_circle</span> Onaylandı
+                        </span>`;
+                    } else if (desc === 'Rezervasyon İptal Edildi') {
+                        statusBadge = `<span class="inline-flex items-center gap-1 px-2.5 py-1 rounded-md text-xs font-semibold bg-red-100 text-red-600">
+                            <span class="material-symbols-outlined text-[13px]">cancel</span> İptal Edildi
+                        </span>`;
+                    } else {
+                        statusBadge = `<span class="inline-flex items-center gap-1 px-2.5 py-1 rounded-md text-xs font-semibold bg-yellow-100 text-yellow-700">
+                            <span class="material-symbols-outlined text-[13px]">schedule</span> Beklemede
+                        </span>`;
+                    }
+
+                    html += `<tr class="hover:bg-surface-container transition-colors group">
+                        <td class="px-6 py-4 font-medium text-primary">#RES-${item.bookingId}</td>
+                        <td class="px-6 py-4">${item.name}</td>
+                        <td class="px-6 py-4 text-on-surface-variant">${item.phoneNO}</td>
+                        <td class="px-6 py-4 text-on-surface-variant">${item.mail}</td>
+                        <td class="px-6 py-4">
+                            <span class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-md bg-secondary-container text-on-secondary-container text-xs font-semibold">
+                                ${item.personCount} kişi
+                            </span>
+                        </td>
+                        <td class="px-6 py-4">
+                            <div class="flex flex-col">
+                                <span>${dateStr}</span>
+                                <span class="text-xs text-on-surface-variant">${timeStr}</span>
+                            </div>
+                        </td>
+                        <td class="px-6 py-4">${statusBadge}</td>
+                        <td class="px-6 py-4 text-right">
+                            <div class="inline-flex gap-1 opacity-0 group-hover:opacity-100 transition-opacity">
+                                <a href="/Booking/BookingStatusApproved/${item.bookingId}"
+                                   class="p-1.5 text-green-600 hover:bg-green-50 transition-colors rounded-md" title="Onayla">
+                                    <span class="material-symbols-outlined text-[20px]">check_circle</span>
+                                </a>
+                                <a href="/Booking/BookingStatusCancelled/${item.bookingId}"
+                                   class="p-1.5 text-red-500 hover:bg-red-50 transition-colors rounded-md" title="İptal Et">
+                                    <span class="material-symbols-outlined text-[20px]">cancel</span>
+                                </a>
+                                <a href="/Booking/UpdateBooking/${item.bookingId}"
+                                   class="p-1.5 text-on-surface-variant hover:text-primary transition-colors rounded-md hover:bg-surface-container-highest" title="Düzenle">
+                                    <span class="material-symbols-outlined text-[20px]">edit</span>
+                                </a>
+                                <a href="/Booking/DeleteBooking/${item.bookingId}"
+                                   class="p-1.5 text-on-surface-variant hover:text-error transition-colors rounded-md hover:bg-error-container" title="Sil">
+                                    <span class="material-symbols-outlined text-[20px]">delete</span>
+                                </a>
+                            </div>
+                        </td>
+                    </tr>`;
+                });
+
+                html += "</tbody></table>";
+                document.getElementById("bookingList").innerHTML = html;
+                document.getElementById("bookingCount").innerText = values.length;
+            });
+
+            connection.start().then(function () {
+                updateConnStatus("Connected");
+                connection.invoke("GetBookingList");
+                setInterval(function () {
+                    connection.invoke("GetBookingList");
+                }, 2000);
+            }).catch(function (err) {
+                updateConnStatus("Hata: " + err.toString());
+                console.error(err);
+            });
+
+        })();
+    </script>
+}

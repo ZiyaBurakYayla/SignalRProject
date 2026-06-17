@@ -1,0 +1,95 @@
+@{
+    ViewData["Title"] = "QR Kod Çözümle";
+}
+
+<style>
+    .glass-panel { background: rgba(246, 240, 232, 0.7); backdrop-filter: blur(12px); border: 1px solid rgba(216, 208, 200, 0.6); }
+    .soft-shadow { box-shadow: 0 2px 16px rgba(58, 48, 42, 0.04); }
+</style>
+
+<div class="max-w-4xl mx-auto space-y-12 font-body">
+
+    <!-- Header -->
+    <header class="space-y-4 max-w-2xl">
+        <p class="text-xs font-bold tracking-widest uppercase text-primary">Sahara Admin</p>
+        <h1 class="text-4xl md:text-5xl font-headline font-bold text-on-surface tracking-tight">QR Kod Çözümle</h1>
+        <p class="text-lg text-on-surface-variant leading-relaxed">
+            Bir QR kod görselini yükleyin, içeriğini anında okuyun.
+        </p>
+    </header>
+
+    <div class="grid grid-cols-1 lg:grid-cols-2 gap-8 items-start">
+
+        <!-- Left: Upload Form -->
+        <div class="glass-panel soft-shadow rounded-xl p-8 space-y-6">
+            <div class="space-y-2 border-b border-outline-variant/60 pb-4">
+                <h2 class="text-2xl font-headline font-semibold text-on-surface">Görsel Yükle</h2>
+                <p class="text-sm text-on-surface-variant">PNG, JPG veya GIF formatında QR kod görseli seçin.</p>
+            </div>
+
+            <form method="post" asp-action="Decode" asp-controller="QrCode" enctype="multipart/form-data" class="space-y-6">
+                @Html.AntiForgeryToken()
+
+                <label for="qr-file"
+                       class="flex flex-col items-center justify-center gap-3 border-2 border-dashed border-outline-variant rounded-xl p-10 cursor-pointer hover:border-primary hover:bg-surface-container-low transition-colors text-center">
+                    <span class="material-symbols-outlined text-5xl text-outline">upload_file</span>
+                    <span class="text-sm font-medium text-on-surface">Dosya seçmek için tıklayın</span>
+                    <span id="file-name" class="text-xs text-on-surface-variant">PNG, JPG, GIF</span>
+                    <input id="qr-file" name="file" type="file" accept="image/*" class="hidden" />
+                </label>
+
+                <button type="submit"
+                        class="w-full bg-primary text-on-primary font-semibold py-4 px-6 rounded-lg shadow-sm hover:opacity-90 transition-opacity flex items-center justify-center gap-2">
+                    <span class="material-symbols-outlined">qr_code_scanner</span>
+                    QR Kodu Çözümle
+                </button>
+            </form>
+        </div>
+
+        <!-- Right: Result -->
+        <div class="bg-surface-container-lowest soft-shadow rounded-xl p-8 border border-outline-variant/40 space-y-6">
+            <h3 class="text-lg font-headline font-semibold text-on-surface border-b border-outline-variant/60 pb-4">Sonuç</h3>
+
+            @if (ViewBag.Result != null)
+            {
+                <div class="space-y-4">
+                    <div class="flex items-center gap-2 text-sm font-medium text-green-700 bg-green-50 rounded-lg px-4 py-2">
+                        <span class="material-symbols-outlined text-base">check_circle</span>
+                        QR kod başarıyla okundu
+                    </div>
+                    <div class="bg-surface-container-low rounded-lg p-4 border border-outline-variant/40">
+                        <p class="text-xs text-on-surface-variant mb-2 font-semibold uppercase tracking-wider">İçerik</p>
+                        <p class="text-on-surface text-sm break-all font-mono">@ViewBag.Result</p>
+                    </div>
+                    <button onclick="navigator.clipboard.writeText('@Html.Raw(ViewBag.Result)'); this.innerHTML='<span class=\'material-symbols-outlined text-sm\'>check</span> Kopyalandı'; setTimeout(()=>this.innerHTML='<span class=\'material-symbols-outlined text-sm\'>content_copy</span> Kopyala',2000);"
+                            class="w-full flex items-center justify-center gap-2 px-4 py-3 border border-outline text-on-surface-variant font-medium rounded-lg hover:bg-surface-container hover:text-on-surface transition-colors text-sm">
+                        <span class="material-symbols-outlined text-sm">content_copy</span>
+                        Kopyala
+                    </button>
+                </div>
+            }
+            else if (ViewBag.Error != null)
+            {
+                <div class="flex items-center gap-2 text-sm font-medium text-red-700 bg-red-50 rounded-lg px-4 py-3">
+                    <span class="material-symbols-outlined text-base">error</span>
+                    @ViewBag.Error
+                </div>
+            }
+            else
+            {
+                <div class="flex flex-col items-center justify-center py-12 text-center">
+                    <span class="material-symbols-outlined text-5xl text-outline-variant mb-3">manage_search</span>
+                    <p class="text-sm text-on-surface-variant">Henüz bir QR kod çözümlenmedi.</p>
+                </div>
+            }
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script>
+        document.getElementById('qr-file').addEventListener('change', function () {
+            document.getElementById('file-name').textContent = this.files[0]?.name ?? 'PNG, JPG, GIF';
+        });
+    </script>
+}

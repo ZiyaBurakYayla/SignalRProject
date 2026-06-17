@@ -1,0 +1,123 @@
+@model CreateAboutDto
+@{
+    ViewData["Title"] = "Yeni Hakkımızda İçeriği Ekle";
+}
+
+<style>
+    .material-symbols-outlined { font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24; }
+</style>
+
+<main class="max-w-4xl mx-auto px-6 py-12 md:py-20">
+
+    <header class="mb-12">
+        <a asp-controller="About" asp-action="AboutList"
+           class="inline-flex items-center text-secondary hover:text-primary transition-colors text-sm font-medium mb-4">
+            <span class="material-symbols-outlined mr-1" style="font-size: 18px;">arrow_back</span>
+            Listeye Dön
+        </a>
+        <h1 class="font-headline text-4xl md:text-5xl tracking-tight font-bold text-on-surface mb-3">
+            Yeni Hakkımızda İçeriği Ekle
+        </h1>
+        <p class="text-secondary text-lg font-body max-w-2xl">
+            Sahara'nın hikayesini ve değerlerini anlatan içerik oluşturun.
+        </p>
+    </header>
+
+    <form asp-controller="About" asp-action="CreateAbout" method="post"
+          class="space-y-10 bg-surface-container-lowest p-8 md:p-12 rounded-xl border border-outline-variant/60 shadow-[0_2px_16px_rgba(58,48,42,0.04)]">
+
+        <div class="space-y-6">
+
+            <!-- Başlık -->
+            <div>
+                <label asp-for="AboutTitle" class="block font-label text-sm font-semibold text-on-surface mb-2">
+                    Başlık <span class="text-error">*</span>
+                </label>
+                <input asp-for="AboutTitle"
+                       class="w-full bg-white border border-outline-variant rounded-lg px-4 py-3 text-on-surface focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent transition-shadow placeholder:text-outline font-body text-base"
+                       placeholder="Örn: Hikayemiz" />
+                <span asp-validation-for="AboutTitle" class="text-error text-xs mt-1 block"></span>
+            </div>
+
+            <!-- Açıklama -->
+            <div>
+                <label asp-for="AboutDescription" class="block font-label text-sm font-semibold text-on-surface mb-2">Açıklama</label>
+                <textarea asp-for="AboutDescription" rows="6"
+                          class="w-full bg-white border border-outline-variant rounded-lg px-4 py-3 text-on-surface focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent transition-shadow placeholder:text-outline font-body text-base resize-y"
+                          placeholder="Bizi biz yapan değerleri anlatın..."></textarea>
+            </div>
+
+        </div>
+
+        <!-- Görsel URL -->
+        <div class="pt-4">
+            <label asp-for="AboutImageUrl" class="block font-label text-sm font-semibold text-on-surface mb-4">Görsel URL</label>
+
+            <!-- URL Input -->
+            <div class="mb-4">
+                <div class="relative">
+                    <div class="pointer-events-none absolute inset-y-0 left-0 flex items-center pl-3">
+                        <span class="material-symbols-outlined text-secondary text-[20px]">link</span>
+                    </div>
+                    <input asp-for="AboutImageUrl"
+                           class="w-full bg-white border border-outline-variant rounded-lg pl-10 pr-4 py-3 text-on-surface focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent transition-shadow placeholder:text-outline font-body text-base"
+                           placeholder="https://..." id="imageUrlInput" />
+                </div>
+            </div>
+
+            <!-- Önizleme Alanı -->
+            <div id="previewWrapper" class="hidden mt-3">
+                <p class="text-xs text-secondary mb-2 font-label">Önizleme:</p>
+                <div class="w-full max-w-sm h-48 rounded-xl overflow-hidden border border-outline-variant/60 bg-surface-container">
+                    <img id="imagePreview" src="" alt="Görsel Önizleme" class="w-full h-full object-cover" />
+                </div>
+            </div>
+
+            <!-- Drop Zone (görsel) -->
+            <div class="mt-4 flex justify-center rounded-xl border border-dashed border-outline-variant px-6 py-12 bg-surface-container-low hover:bg-surface-variant transition-colors group cursor-pointer" id="drop-zone">
+                <div class="text-center">
+                    <span class="material-symbols-outlined text-5xl text-primary mb-4 group-hover:scale-110 transition-transform duration-300">add_photo_alternate</span>
+                    <div class="mt-4 text-sm leading-6 text-on-surface-variant text-center">
+                        <p class="font-semibold text-primary">URL'yi yukarıya yapıştırın</p>
+                        <p class="text-secondary mt-1">veya görsel URL'sini girerek önizleyin</p>
+                    </div>
+                    <p class="text-xs leading-5 text-secondary mt-2">PNG, JPG, WEBP · Sıcak tonlu fotoğraflar önerilir.</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Action Buttons -->
+        <div class="pt-8 border-t border-outline-variant/60 flex items-center justify-end gap-4">
+            <a asp-controller="About" asp-action="AboutList"
+               class="px-6 py-3 rounded-lg text-on-surface-variant font-semibold hover:text-on-surface transition-colors">
+                Vazgeç
+            </a>
+            <button type="submit"
+                    class="bg-primary text-on-primary px-8 py-3 rounded-lg font-semibold shadow-sm hover:bg-on-primary-fixed-variant hover:-translate-y-0.5 transition-all duration-300">
+                Kaydet
+            </button>
+        </div>
+
+    </form>
+
+</main>
+
+<script>
+    // URL girince önizleme göster
+    const imageUrlInput = document.getElementById('imageUrlInput');
+    const imagePreview = document.getElementById('imagePreview');
+    const previewWrapper = document.getElementById('previewWrapper');
+
+    imageUrlInput.addEventListener('input', function () {
+        const url = this.value.trim();
+        if (url.length > 10) {
+            imagePreview.src = url;
+            previewWrapper.classList.remove('hidden');
+            imagePreview.onerror = function () {
+                previewWrapper.classList.add('hidden');
+            };
+        } else {
+            previewWrapper.classList.add('hidden');
+        }
+    });
+</script>

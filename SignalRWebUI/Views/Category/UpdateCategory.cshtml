@@ -1,0 +1,104 @@
+@model UpdateCategoryDto
+@{
+    ViewData["Title"] = "Kategori Güncelle";
+}
+
+<style>
+    .material-symbols-outlined {
+        font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+    }
+    .sahara-shadow {
+        box-shadow: 0 2px 16px rgba(58, 48, 42, 0.04);
+    }
+    .form-input-sahara {
+        width: 100%;
+        border-radius: 0.5rem;
+        border: 1px solid rgba(216, 208, 200, 0.6);
+        background-color: #ffffff;
+        color: #3a302a;
+        padding: 0.5rem 0.75rem;
+        transition: border-color 0.2s, box-shadow 0.2s;
+        outline: none;
+    }
+    .form-input-sahara:focus {
+        border-color: #c2652a;
+        box-shadow: 0 0 0 1px #c2652a;
+    }
+</style>
+
+<main class="w-full max-w-3xl mx-auto py-12 px-4 sm:px-6 lg:px-8">
+
+    <!-- Page Header -->
+    <div class="mb-8 flex items-center justify-between">
+        <div>
+            <a asp-controller="Category" asp-action="CategoryList"
+               class="inline-flex items-center text-sm font-medium text-secondary hover:text-primary transition-colors mb-2">
+                <span class="material-symbols-outlined text-lg mr-1">arrow_back</span>
+                Kategorilere Dön
+            </a>
+            <h1 class="text-4xl font-headline font-semibold text-on-surface tracking-tight">Kategori Güncelle</h1>
+            <p class="mt-2 text-on-surface-variant font-body">Mevcut bir kategorinin detaylarını düzenleyin.</p>
+        </div>
+    </div>
+
+    <!-- Form Card -->
+    <div class="bg-surface-container-low rounded-xl sahara-shadow border border-outline-variant/30 overflow-hidden">
+        <div class="p-8 sm:p-10">
+            <form asp-controller="Category" asp-action="UpdateCategory" method="post" class="space-y-8">
+
+                @* Hidden field for ID *@
+                <input type="hidden" asp-for="CategoryId" />
+
+                <!-- Section: Genel Bilgiler -->
+                <div>
+                    <h2 class="text-xl font-headline text-on-surface mb-6 pb-2 border-b border-outline-variant/40">Genel Bilgiler</h2>
+                    <div class="grid grid-cols-1 gap-y-6 gap-x-4 sm:grid-cols-6">
+
+                        <!-- Kategori Adı -->
+                        <div class="sm:col-span-4">
+                            <label asp-for="CategoryName" class="block text-sm font-medium text-on-surface-variant mb-1">
+                                Kategori Adı <span class="text-tertiary">*</span>
+                            </label>
+                            <div class="relative rounded-md shadow-sm">
+                                <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                                    <span class="material-symbols-outlined text-outline">category</span>
+                                </div>
+                                <input asp-for="CategoryName"
+                                       class="form-input-sahara pl-10"
+                                       placeholder="Örn: Başlangıçlar, Ana Yemekler" />
+                            </div>
+                            <p class="mt-1 text-xs text-secondary">Menüde müşterilere gösterilecek isim.</p>
+                            <span asp-validation-for="CategoryName" class="text-error text-xs mt-1 block"></span>
+                        </div>
+
+                        <!-- Durum -->
+                        <div class="sm:col-span-3">
+                            <label class="block text-sm font-medium text-on-surface-variant mb-1">Durum</label>
+                            <select name="CategoryStatus"
+                                    class="form-input-sahara py-2 pl-3 pr-10">
+                                <option value="true" @@(Model != null && Model.CategoryStatus ? "selected" : "")>Aktif</option>
+                                <option value="false" @@(Model != null && !Model.CategoryStatus ? "selected" : "")>Pasif</option>
+                            </select>
+                        </div>
+
+                    </div>
+                </div>
+
+                <!-- Action Buttons -->
+                <div class="pt-6 border-t border-outline-variant/40 flex items-center justify-end gap-x-4">
+                    <a asp-controller="Category" asp-action="CategoryList"
+                       class="px-6 py-2.5 text-sm font-medium text-on-surface-variant bg-transparent border border-outline-variant hover:bg-surface-variant hover:text-on-surface rounded-lg transition-all duration-200">
+                        Vazgeç
+                    </a>
+                    <button type="submit"
+                            class="px-6 py-2.5 text-sm font-medium text-on-primary bg-primary hover:bg-on-primary-fixed-variant rounded-lg shadow-sm transition-all duration-200 flex items-center gap-2">
+                        <span class="material-symbols-outlined text-sm">save</span>
+                        Güncelle
+                    </button>
+                </div>
+
+            </form>
+        </div>
+    </div>
+
+</main>

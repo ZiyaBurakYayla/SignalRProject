@@ -1,0 +1,131 @@
+@model CreateDiscountDto
+@{
+    ViewData["Title"] = "Yeni İndirim Ekle";
+}
+
+<style>
+    .material-symbols-outlined { font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24; }
+</style>
+
+<main class="w-full max-w-4xl mx-auto px-6 py-12 md:py-20 lg:px-8 flex flex-col items-center">
+
+    <!-- Header -->
+    <header class="text-center mb-12 max-w-2xl w-full">
+        <a asp-controller="Discount" asp-action="DiscountList"
+           class="inline-flex items-center text-secondary hover:text-primary transition-colors text-sm font-medium mb-6">
+            <span class="material-symbols-outlined mr-1" style="font-size: 18px;">arrow_back</span>
+            İndirim Listesine Dön
+        </a>
+        <h1 class="font-headline text-4xl md:text-5xl lg:text-6xl text-on-surface mb-4 leading-tight tracking-tight">
+            Yeni İndirim Ekle
+        </h1>
+        <p class="font-body text-lg text-on-surface-variant max-w-lg mx-auto">
+            Kataloğa yeni bir indirim veya kampanya girişi yapın.
+        </p>
+    </header>
+
+    <!-- Form Card -->
+    <section class="w-full bg-surface-container-low rounded-xl shadow-[0_2px_16px_rgba(58,48,42,0.04)] border border-outline-variant/60 p-8 md:p-12">
+        <form asp-controller="Discount" asp-action="CreateDiscount" method="post" class="space-y-10">
+
+            <!-- Başlık & İndirim Tutarı -->
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+
+                <div class="flex flex-col gap-2">
+                    <label asp-for="Title" class="font-label text-sm font-semibold text-on-surface-variant tracking-wide">
+                        Başlık
+                    </label>
+                    <input asp-for="Title"
+                           class="w-full bg-surface-container-lowest border border-outline-variant/60 rounded-lg px-4 py-3 font-body text-on-surface placeholder:text-outline focus:border-primary focus:ring-1 focus:ring-primary focus:outline-none transition-colors duration-200"
+                           placeholder="Örn: Yaz Fırsatı" />
+                    <span asp-validation-for="Title" class="text-error text-xs"></span>
+                </div>
+
+                <div class="flex flex-col gap-2">
+                    <label asp-for="DiscountAmount" class="font-label text-sm font-semibold text-on-surface-variant tracking-wide">
+                        İndirim Tutarı
+                    </label>
+                    <input asp-for="DiscountAmount"
+                           class="w-full bg-surface-container-lowest border border-outline-variant/60 rounded-lg px-4 py-3 font-body text-on-surface placeholder:text-outline focus:border-primary focus:ring-1 focus:ring-primary focus:outline-none transition-colors duration-200"
+                           placeholder="Örn: %20 veya 50 TL" />
+                    <span asp-validation-for="DiscountAmount" class="text-error text-xs"></span>
+                </div>
+
+            </div>
+
+            <!-- Açıklama -->
+            <div class="flex flex-col gap-2">
+                <label asp-for="DiscountDescription" class="font-label text-sm font-semibold text-on-surface-variant tracking-wide">
+                    Açıklama
+                </label>
+                <textarea asp-for="DiscountDescription" rows="4"
+                          class="w-full bg-surface-container-lowest border border-outline-variant/60 rounded-lg px-4 py-3 font-body text-on-surface placeholder:text-outline focus:border-primary focus:ring-1 focus:ring-primary focus:outline-none transition-colors duration-200 resize-y"
+                          placeholder="Kampanya detaylarını buraya girin..."></textarea>
+            </div>
+
+            <!-- Görsel URL -->
+            <div class="flex flex-col gap-2">
+                <label asp-for="DiscountImageUrl" class="font-label text-sm font-semibold text-on-surface-variant tracking-wide">
+                    İndirim Görseli URL
+                </label>
+                <div class="relative">
+                    <span class="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-outline pointer-events-none" style="font-size: 20px;">link</span>
+                    <input asp-for="DiscountImageUrl" id="imageUrlInput"
+                           class="w-full bg-surface-container-lowest border border-outline-variant/60 rounded-lg pl-10 pr-4 py-3 font-body text-on-surface placeholder:text-outline focus:border-primary focus:ring-1 focus:ring-primary focus:outline-none transition-colors duration-200"
+                           placeholder="https://..." />
+                </div>
+
+                <!-- Önizleme -->
+                <div id="previewWrapper" class="hidden mt-3">
+                    <p class="text-xs text-secondary mb-2 font-label">Önizleme:</p>
+                    <div class="w-32 h-32 rounded-xl overflow-hidden border border-outline-variant/60 bg-surface-container">
+                        <img id="imagePreview" src="" alt="Görsel Önizleme" class="w-full h-full object-cover" />
+                    </div>
+                </div>
+
+                <!-- Drop Zone (dekoratif) -->
+                <div class="relative group w-full h-36 bg-surface-variant/40 rounded-xl border-2 border-dashed border-outline-variant/60 hover:border-primary/50 hover:bg-surface-variant/60 transition-all duration-300 flex flex-col items-center justify-center overflow-hidden mt-2">
+                    <div class="flex flex-col items-center justify-center text-center p-6 space-y-2 pointer-events-none">
+                        <div class="w-12 h-12 rounded-full bg-surface-container flex items-center justify-center group-hover:bg-primary/10 transition-colors duration-300">
+                            <span class="material-symbols-outlined text-2xl text-secondary group-hover:text-primary transition-colors duration-300">image</span>
+                        </div>
+                        <p class="font-body text-on-surface-variant text-sm">URL'yi yukarıya yapıştırın, önizleme burada görünür</p>
+                        <p class="font-body text-xs text-outline">PNG, JPG, WEBP · Sıcak tonlu görseller önerilir</p>
+                    </div>
+                    <div class="absolute -inset-4 bg-primary/5 rounded-xl blur-xl opacity-0 group-hover:opacity-100 transition-opacity duration-500 pointer-events-none"></div>
+                </div>
+            </div>
+
+            <!-- Actions -->
+            <div class="flex flex-col-reverse sm:flex-row items-center justify-end gap-4 pt-6 border-t border-outline-variant/30 mt-8">
+                <a asp-controller="Discount" asp-action="DiscountList"
+                   class="w-full sm:w-auto px-8 py-3 rounded-lg font-label font-bold text-on-surface-variant border border-outline-variant/60 hover:bg-surface-variant transition-colors duration-200 text-center">
+                    Vazgeç
+                </a>
+                <button type="submit"
+                        class="w-full sm:w-auto px-8 py-3 rounded-lg font-label font-bold bg-primary text-on-primary hover:bg-on-primary-fixed-variant transition-colors duration-200 shadow-sm">
+                    Kaydet
+                </button>
+            </div>
+
+        </form>
+    </section>
+
+</main>
+
+<script>
+    const imageUrlInput = document.getElementById('imageUrlInput');
+    const imagePreview = document.getElementById('imagePreview');
+    const previewWrapper = document.getElementById('previewWrapper');
+
+    imageUrlInput.addEventListener('input', function () {
+        const url = this.value.trim();
+        if (url.length > 10) {
+            imagePreview.src = url;
+            previewWrapper.classList.remove('hidden');
+            imagePreview.onerror = () => previewWrapper.classList.add('hidden');
+        } else {
+            previewWrapper.classList.add('hidden');
+        }
+    });
+</script>

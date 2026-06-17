@@ -1,0 +1,216 @@
+@{
+    ViewData["Title"] = "Masa Yönetimi";
+}
+
+<style>
+    .material-symbols-outlined { font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24; }
+</style>
+
+<main class="admin-page">
+
+    <!-- Header -->
+    <header class="admin-header">
+        <div>
+            <p class="admin-badge">Sahara Admin</p>
+            <h1 class="admin-title">Masa Yönetimi</h1>
+            <p class="admin-subtitle">Anlık masa doluluk durumunu görüntüleyin ve yönetin.</p>
+        </div>
+        <a asp-controller="OrderTable" asp-action="CreateOrderTable" class="admin-btn-add">
+            <span class="material-symbols-outlined">add</span>
+            Yeni Masa
+        </a>
+    </header>
+
+    <!-- Connection Status -->
+    <div class="flex items-center gap-2 text-sm text-on-surface-variant font-body mb-2">
+        <span id="connDot" style="display:inline-block;width:10px;height:10px;border-radius:50%;background:#9a9088;flex-shrink:0"></span>
+        <span id="connstatus">Bağlanıyor...</span>
+    </div>
+
+    <!-- Filter Chips -->
+    <div id="filterChips" class="flex flex-wrap gap-3 mb-6"></div>
+
+    <!-- Grid -->
+    <div id="orderTableGrid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6"></div>
+
+    <!-- Pagination + Footer -->
+    <div class="mt-8 pt-6 border-t border-outline-variant/60 flex flex-col sm:flex-row items-center justify-between gap-4">
+        <span class="font-body text-sm text-on-surface-variant">
+            Toplam <span id="orderTableCount" class="font-medium text-on-surface">0</span> masa
+            &nbsp;·&nbsp;
+            Sayfa <span id="currentPageLabel" class="font-medium text-on-surface">1</span> / <span id="totalPageLabel" class="font-medium text-on-surface">1</span>
+        </span>
+        <div id="pagination" class="flex items-center gap-2"></div>
+    </div>
+
+</main>
+
+@section Scripts {
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/microsoft-signalr/7.0.5/signalr.min.js"></script>
+    <script type="text/javascript">
+        (function () {
+            var PAGE_SIZE = 16;
+            var currentPage = 1;
+            var allValues = [];
+
+            var connection = new signalR.HubConnectionBuilder()
+                .withUrl("https://localhost:7196/signalrhub")
+                .build();
+
+            function updateConnStatus(state) {
+                var dot = document.getElementById("connDot");
+                var label = document.getElementById("connstatus");
+                if (label) label.innerText = state;
+                if (dot) {
+                    if (state === "Connected") dot.style.background = "#22c55e";
+                    else if (state.startsWith("Hata")) dot.style.background = "#c0392b";
+                    else dot.style.background = "#9a9088";
+                }
+            }
+
+            function renderGrid(values, page) {
+                var start = (page - 1) * PAGE_SIZE;
+                var pageItems = values.slice(start, start + PAGE_SIZE);
+                var grid = "";
+
+                pageItems.forEach(function (item) {
+                    var isDolu = item.status;
+                    var accentColor = isDolu ? "#c0392b" : "#4a7c59";
+                    var statusColor = isDolu ? "#c0392b" : "#4a7c59";
+                    var statusLabel = isDolu ? "Dolu" : "Boş";
+
+                    grid += `
+                    <div class="bg-surface-container-low p-6 rounded-xl border border-outline-variant/60 hover:shadow-[0_4px_24px_rgba(58,48,42,0.08)] transition-all relative group overflow-hidden"
+                         style="box-shadow:0 2px 16px rgba(58,48,42,0.04);">
+                        <div class="absolute top-0 left-0 w-full" style="height:4px;background:${accentColor}"></div>
+                        <div class="flex justify-between items-start mb-4">
+                            <h3 class="font-headline font-semibold text-2xl text-on-background">${item.orderTableName}</h3>
+                            <div class="flex items-center gap-1 ml-auto">
+                                <a href="/OrderTable/UpdateOrderTable/${item.orderTableId}"
+                                   class="flex items-center gap-1 px-2 py-1 rounded-md text-xs font-medium text-primary hover:bg-primary/10 transition-colors">
+                                    <span class="material-symbols-outlined" style="font-size:16px">edit</span>
+                                    Düzenle
+                                </a>
+                                <a href="/OrderTable/DeleteOrderTable/${item.orderTableId}"
+                                   class="flex items-center px-2 py-1 rounded-md text-xs font-medium text-on-surface-variant hover:text-error hover:bg-error-container transition-colors opacity-0 group-hover:opacity-100">
+                                    <span class="material-symbols-outlined" style="font-size:16px">delete</span>
+                                </a>
+                            </div>
+                        </div>
+                        <div class="space-y-3">
+                            <div class="flex items-center gap-2 text-sm">
+                                <span class="material-symbols-outlined text-on-surface-variant" style="font-size:18px">table_restaurant</span>
+                                <span class="text-on-surface-variant">#${item.orderTableId}</span>
+                            </div>
+                            <div class="flex items-center gap-2 text-sm font-medium" style="color:${statusColor}">
+                                <div class="w-2 h-2 rounded-full" style="background:${statusColor}"></div>
+                                ${statusLabel}
+                            </div>
+                        </div>
+                    </div>`;
+                });
+
+                if (values.length === 0) {
+                    grid = `<div class="col-span-4 py-20 flex flex-col items-center justify-center text-secondary gap-3">
+                        <span class="material-symbols-outlined opacity-50" style="font-size:3rem">table_restaurant</span>
+                        <p class="font-label text-sm">Henüz masa bulunmuyor.</p>
+                    </div>`;
+                }
+
+                document.getElementById("orderTableGrid").innerHTML = grid;
+            }
+
+            function renderPagination(total, page) {
+                var totalPages = Math.ceil(total / PAGE_SIZE);
+                document.getElementById("currentPageLabel").innerText = page;
+                document.getElementById("totalPageLabel").innerText = totalPages;
+
+                var html = "";
+
+                html += `<button onclick="goPage(${page - 1})" ${page === 1 ? "disabled" : ""}
+                    class="flex items-center gap-1 px-3 py-2 border border-outline-variant text-on-surface-variant hover:text-primary hover:border-primary rounded-lg transition-colors font-medium text-sm disabled:opacity-40 disabled:cursor-not-allowed">
+                    <span class="material-symbols-outlined" style="font-size:18px">chevron_left</span>
+                </button>`;
+
+                var start = Math.max(1, page - 2);
+                var end = Math.min(totalPages, start + 4);
+                if (end - start < 4) start = Math.max(1, end - 4);
+
+                if (start > 1) {
+                    html += pageBtn(1, page);
+                    if (start > 2) html += `<span class="px-1 text-on-surface-variant text-sm">…</span>`;
+                }
+
+                for (var i = start; i <= end; i++) {
+                    html += pageBtn(i, page);
+                }
+
+                if (end < totalPages) {
+                    if (end < totalPages - 1) html += `<span class="px-1 text-on-surface-variant text-sm">…</span>`;
+                    html += pageBtn(totalPages, page);
+                }
+
+                html += `<button onclick="goPage(${page + 1})" ${page === totalPages ? "disabled" : ""}
+                    class="flex items-center gap-1 px-3 py-2 border border-outline-variant text-on-surface-variant hover:text-primary hover:border-primary rounded-lg transition-colors font-medium text-sm disabled:opacity-40 disabled:cursor-not-allowed">
+                    <span class="material-symbols-outlined" style="font-size:18px">chevron_right</span>
+                </button>`;
+
+                document.getElementById("pagination").innerHTML = html;
+            }
+
+            function pageBtn(n, active) {
+                var isActive = n === active;
+                return `<button onclick="goPage(${n})"
+                    class="w-10 h-10 flex items-center justify-center rounded-lg font-medium text-sm transition-colors
+                    ${isActive ? "bg-primary text-on-primary shadow-sm" : "border border-outline-variant/50 text-on-surface-variant hover:border-primary hover:text-primary"}">
+                    ${n}
+                </button>`;
+            }
+
+            window.goPage = function (n) {
+                var totalPages = Math.ceil(allValues.length / PAGE_SIZE);
+                if (n < 1 || n > totalPages) return;
+                currentPage = n;
+                renderGrid(allValues, currentPage);
+                renderPagination(allValues.length, currentPage);
+            };
+
+            connection.on("ReceiveOrderTableList", function (values) {
+                allValues = values;
+
+                var dolu = values.filter(function (x) { return x.status; }).length;
+                var bos = values.filter(function (x) { return !x.status; }).length;
+
+                document.getElementById("filterChips").innerHTML = `
+                    <span class="px-3 py-1 rounded-full bg-surface-container-high text-xs font-medium text-on-surface-variant flex items-center gap-2 border border-outline-variant/30">
+                        <div class="w-2 h-2 rounded-full" style="background:#4a7c59"></div> Boş (${bos})
+                    </span>
+                    <span class="px-3 py-1 rounded-full bg-surface-container-high text-xs font-medium text-on-surface-variant flex items-center gap-2 border border-outline-variant/30">
+                        <div class="w-2 h-2 rounded-full" style="background:#c0392b"></div> Dolu (${dolu})
+                    </span>`;
+
+                document.getElementById("orderTableCount").innerText = values.length;
+
+                var totalPages = Math.max(1, Math.ceil(values.length / PAGE_SIZE));
+                if (currentPage > totalPages) currentPage = totalPages;
+
+                renderGrid(allValues, currentPage);
+                renderPagination(allValues.length, currentPage);
+            });
+
+            updateConnStatus("Bağlanıyor...");
+
+            connection.start().then(function () {
+                updateConnStatus("Connected");
+                connection.invoke("GetOrderTableList");
+                setInterval(function () {
+                    connection.invoke("GetOrderTableList");
+                }, 2000);
+            }).catch(function (err) {
+                updateConnStatus("Hata: " + err.toString());
+                console.error(err);
+            });
+
+        })();
+    </script>
+}

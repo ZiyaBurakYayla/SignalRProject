@@ -1,0 +1,123 @@
+@model CreateTestimonialDto
+@{
+    ViewData["Title"] = "Yeni Müşteri Yorumu Ekle";
+}
+
+<style>
+    .material-symbols-outlined { font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24; }
+</style>
+
+<main class="w-full max-w-3xl mx-auto py-10 px-6">
+
+    <!-- Header -->
+    <header class="mb-10 text-center md:text-left">
+        <a asp-controller="Testimonial" asp-action="TestimonialList"
+           class="inline-flex items-center text-secondary hover:text-primary transition-colors text-sm font-medium mb-4">
+            <span class="material-symbols-outlined mr-1" style="font-size: 18px;">arrow_back</span>
+            Yorumlara Dön
+        </a>
+        <h1 class="font-headline text-4xl md:text-5xl font-semibold text-primary mb-3">Yeni Müşteri Yorumu Ekle</h1>
+        <p class="font-body text-on-surface-variant text-lg">Müşterinizin deneyimini ve bilgilerini sisteme kaydedin.</p>
+    </header>
+
+    <!-- Form Card -->
+    <div class="bg-surface-container-low rounded-xl border border-outline-variant/60 shadow-[0_2px_16px_rgba(58,48,42,0.04)] p-8 md:p-10">
+        <form asp-controller="Testimonial" asp-action="CreateTestimonial" method="post" class="space-y-8">
+
+            <!-- İsim & Başlık -->
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+                <div class="space-y-2">
+                    <label asp-for="Name" class="block font-label text-sm font-semibold text-on-surface">İsim Soyisim</label>
+                    <input asp-for="Name"
+                           class="w-full bg-surface-container-lowest border border-outline-variant text-on-surface rounded-lg px-4 py-3 focus:outline-none focus:ring-2 focus:ring-primary focus:border-primary transition-all duration-200 placeholder:text-on-surface-variant/50"
+                           placeholder="Örn: Ayşe Yılmaz" />
+                    <span asp-validation-for="Name" class="text-error text-xs block"></span>
+                </div>
+                <div class="space-y-2">
+                    <label asp-for="Title" class="block font-label text-sm font-semibold text-on-surface">Başlık</label>
+                    <input asp-for="Title"
+                           class="w-full bg-surface-container-lowest border border-outline-variant text-on-surface rounded-lg px-4 py-3 focus:outline-none focus:ring-2 focus:ring-primary focus:border-primary transition-all duration-200 placeholder:text-on-surface-variant/50"
+                           placeholder="Örn: Gurme, Müşteri" />
+                    <span asp-validation-for="Title" class="text-error text-xs block"></span>
+                </div>
+            </div>
+
+            <!-- Yorum -->
+            <div class="space-y-2">
+                <label asp-for="Comment" class="block font-label text-sm font-semibold text-on-surface">Yorum</label>
+                <textarea asp-for="Comment" rows="4"
+                          class="w-full bg-surface-container-lowest border border-outline-variant text-on-surface rounded-lg px-4 py-3 focus:outline-none focus:ring-2 focus:ring-primary focus:border-primary transition-all duration-200 placeholder:text-on-surface-variant/50 resize-none"
+                          placeholder="Müşterinin deneyimini buraya yazın..."></textarea>
+            </div>
+
+            <!-- Görsel URL & Durum -->
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-8 items-start">
+
+                <!-- Görsel URL -->
+                <div class="space-y-2">
+                    <label asp-for="ImageUrl" class="block font-label text-sm font-semibold text-on-surface">Profil Görseli URL</label>
+                    <div class="relative">
+                        <span class="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-outline pointer-events-none" style="font-size: 20px;">link</span>
+                        <input asp-for="ImageUrl" id="imageUrlInput"
+                               class="w-full bg-surface-container-lowest border border-outline-variant text-on-surface rounded-lg pl-10 pr-4 py-3 focus:outline-none focus:ring-2 focus:ring-primary focus:border-primary transition-all duration-200 placeholder:text-on-surface-variant/50"
+                               placeholder="https://..." />
+                    </div>
+                    <!-- Önizleme -->
+                    <div id="previewWrapper" class="hidden mt-3 flex items-center gap-3">
+                        <img id="imagePreview" src="" alt="Önizleme"
+                             class="w-14 h-14 rounded-full object-cover border border-outline-variant/40" />
+                        <span class="text-xs text-secondary font-label">Önizleme</span>
+                    </div>
+                </div>
+
+                <!-- Durum -->
+                <div class="space-y-3">
+                    <label class="block font-label text-sm font-semibold text-on-surface">Durum</label>
+                    <div class="flex items-center gap-4">
+                        <label class="flex items-center gap-2 cursor-pointer group">
+                            <input asp-for="Status" type="checkbox"
+                                   class="form-checkbox text-primary border-outline-variant focus:ring-primary h-5 w-5 rounded bg-surface-container-lowest" />
+                            <span class="text-on-surface font-body group-hover:text-primary transition-colors">Aktif</span>
+                        </label>
+                    </div>
+                    <p class="text-xs text-on-surface-variant">Aktif yorumlar "Testimonials" sayfasında görünür.</p>
+                </div>
+
+            </div>
+
+            <div class="h-px w-full bg-outline-variant/60"></div>
+
+            <!-- Actions -->
+            <div class="flex flex-col-reverse sm:flex-row justify-end items-center gap-4">
+                <a asp-controller="Testimonial" asp-action="TestimonialList"
+                   class="w-full sm:w-auto px-6 py-3 rounded-lg border border-outline-variant text-on-surface font-semibold hover:bg-surface-container-high transition-colors text-center">
+                    Vazgeç
+                </a>
+                <button type="submit"
+                        class="w-full sm:w-auto px-8 py-3 rounded-lg bg-primary text-on-primary font-semibold hover:bg-on-primary-fixed-variant shadow-sm hover:shadow-md transition-all duration-200 flex items-center justify-center gap-2">
+                    <span class="material-symbols-outlined text-lg">save</span>
+                    Kaydet
+                </button>
+            </div>
+
+        </form>
+    </div>
+
+</main>
+
+<script>
+    const imageUrlInput = document.getElementById('imageUrlInput');
+    const imagePreview = document.getElementById('imagePreview');
+    const previewWrapper = document.getElementById('previewWrapper');
+
+    imageUrlInput.addEventListener('input', function () {
+        const url = this.value.trim();
+        if (url.length > 10) {
+            imagePreview.src = url;
+            previewWrapper.classList.remove('hidden');
+            imagePreview.onerror = () => previewWrapper.classList.add('hidden');
+        } else {
+            previewWrapper.classList.add('hidden');
+        }
+    });
+</script>
