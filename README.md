@@ -159,6 +159,7 @@ SignalRProject/
 
 **Frontend**
 - Razor Views + ViewComponents
+- Stitch Aı tasarım promptları
 - Bootstrap 4 / Feane teması (halka açık site)
 - Tailwind CSS (yönetici sidebar)
 - jQuery + AJAX, SweetAlert
@@ -169,3 +170,18 @@ SignalRProject/
 - SMTP ile e-posta gönderimi
 
 ---
+
+![1](https://raw.githubusercontent.com/ZiyaBurakYayla/SignalRProject/refs/heads/Default/SignalRWebUI/Images/Ekran%20g%C3%B6r%C3%BCnt%C3%BCs%C3%BC%202026-06-18%20010250.png)
+![2](https://raw.githubusercontent.com/ZiyaBurakYayla/SignalRProject/refs/heads/Default/SignalRWebUI/Images/Ekran%20g%C3%B6r%C3%BCnt%C3%BCs%C3%BC%202026-06-18%20010313.png)
+![3](https://raw.githubusercontent.com/ZiyaBurakYayla/SignalRProject/refs/heads/Default/SignalRWebUI/Images/Ekran%20g%C3%B6r%C3%BCnt%C3%BCs%C3%BC%202026-06-18%20010327.png)
+![4](https://raw.githubusercontent.com/ZiyaBurakYayla/SignalRProject/refs/heads/Default/SignalRWebUI/Images/Ekran%20g%C3%B6r%C3%BCnt%C3%BCs%C3%BC%202026-06-18%20010337.png)
+![5](https://raw.githubusercontent.com/ZiyaBurakYayla/SignalRProject/refs/heads/Default/SignalRWebUI/Images/Ekran%20g%C3%B6r%C3%BCnt%C3%BCs%C3%BC%202026-06-18%20010349.png)
+![6](https://raw.githubusercontent.com/ZiyaBurakYayla/SignalRProject/refs/heads/Default/SignalRWebUI/Images/Ekran%20g%C3%B6r%C3%BCnt%C3%BCs%C3%BC%202026-06-18%20010356.png)
+![7](https://raw.githubusercontent.com/ZiyaBurakYayla/SignalRProject/refs/heads/Default/SignalRWebUI/Images/Ekran%20g%C3%B6r%C3%BCnt%C3%BCs%C3%BC%202026-06-18%20010418.png)
+![8](https://raw.githubusercontent.com/ZiyaBurakYayla/SignalRProject/refs/heads/Default/SignalRWebUI/Images/Ekran%20g%C3%B6r%C3%BCnt%C3%BCs%C3%BC%202026-06-18%20010435.png)
+![9](https://raw.githubusercontent.com/ZiyaBurakYayla/SignalRProject/refs/heads/Default/SignalRWebUI/Images/Ekran%20g%C3%B6r%C3%BCnt%C3%BCs%C3%BC%202026-06-18%20010512.png)
+![10](https://raw.githubusercontent.com/ZiyaBurakYayla/SignalRProject/refs/heads/Default/SignalRWebUI/Images/Ekran%20g%C3%B6r%C3%BCnt%C3%BCs%C3%BC%202026-06-18%20010452.png)
+![11](https://raw.githubusercontent.com/ZiyaBurakYayla/SignalRProject/refs/heads/Default/SignalRWebUI/Images/Ekran%20g%C3%B6r%C3%BCnt%C3%BCs%C3%BC%202026-06-18%20010442.png)
+![12](https://raw.githubusercontent.com/ZiyaBurakYayla/SignalRProject/refs/heads/Default/SignalRWebUI/Images/Ekran%20g%C3%B6r%C3%BCnt%C3%BCs%C3%BC%202026-06-18%20010525.png)
+![13](https://raw.githubusercontent.com/ZiyaBurakYayla/SignalRProject/refs/heads/Default/SignalRWebUI/Images/Ekran%20g%C3%B6r%C3%BCnt%C3%BCs%C3%BC%202026-06-18%20010551.png)
+
